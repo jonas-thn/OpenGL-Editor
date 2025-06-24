@@ -13,7 +13,7 @@ public:
 	~GUI();
 	void Init();
 	void ProcessEvent(SDL_Event& event);
-	void Render();
+	void Render(unsigned int fboTexture, Display& display);
 
 private:
 	SDL_Window* window;

@@ -12,6 +12,8 @@
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_impl_sdl2.h"
 #include "ImGui/imgui_impl_opengl3.h"
+#include "Mesh.h"
+#include "data.h"
 
 class Application
 {
@@ -32,5 +34,12 @@ private:
 	bool running;
 	std::optional<Display> display;
 	std::optional<GUI> gui;
+
+	unsigned int fbo;
+	unsigned int fboTexture;
+	unsigned int fboDepth;
+
+	std::optional<Shader> simpleShader;
+	Mesh triangle = Mesh(std::vector<float>(std::begin(triangleVertices), std::end(triangleVertices)));
 };
 

@@ -28,14 +28,17 @@ void GUI::ProcessEvent(SDL_Event& event)
 	ImGui_ImplSDL2_ProcessEvent(&event);
 }
 
-void GUI::Render()
+void GUI::Render(unsigned int fboTexture, Display& display)
 {
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame();
 	ImGui::NewFrame();
 
-	//draw stuff
-	ImGui::ShowDemoWindow();
+	ImGui::Begin("OpenGL Viewport");
+
+	ImGui::Image((void*)(intptr_t)fboTexture, ImVec2((float)display.GetWidth(), (float)display.GetHeight()), ImVec2(0, 1), ImVec2(1, 0));
+
+	ImGui::End();
 
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

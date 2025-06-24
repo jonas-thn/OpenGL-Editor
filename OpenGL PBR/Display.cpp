@@ -35,6 +35,7 @@ bool Display::Init()
 
 void Display::Clear(float r, float g, float b, float a) const
 {
+	glViewport(0, 0, width, height);
 	glClearColor(r, g, b, a);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
