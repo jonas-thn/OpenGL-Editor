@@ -34,7 +34,11 @@ void GUI::Render(unsigned int fboTexture, Display& display)
 	ImGui_ImplSDL2_NewFrame();
 	ImGui::NewFrame();
 
-	ImGui::Begin("OpenGL Viewport");
+	ImGui::SetNextWindowSize(ImVec2((float)display.GetWidth() / 2, (float)display.GetHeight() / 2), ImGuiCond_Once);
+	ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_Once);
+
+	ImGuiWindowFlags flags = ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse;
+	ImGui::Begin("OpenGL Viewport", nullptr, flags);
 
 	ImGui::Image((void*)(intptr_t)fboTexture, ImVec2((float)display.GetWidth() / 2, (float)display.GetHeight() / 2), ImVec2(0, 1), ImVec2(1, 0));
 
