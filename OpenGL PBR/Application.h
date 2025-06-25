@@ -31,6 +31,8 @@ public:
 	bool IsRunning() const { return running; }
 
 private:
+	float deltaTime;
+	float lastFrame;
 	bool running;
 	std::optional<Display> display;
 	std::optional<GUI> gui;
@@ -40,6 +42,6 @@ private:
 	unsigned int fboDepth;
 
 	std::optional<Shader> simpleShader;
-	Mesh triangle = Mesh(std::vector<float>(std::begin(triangleVertices), std::end(triangleVertices)));
+	Mesh triangle = Mesh(std::vector<float>(std::begin(quadVertices), std::end(quadVertices)), std::vector<unsigned int>(std::begin(quadIndices), std::end(quadIndices)));
 };
 

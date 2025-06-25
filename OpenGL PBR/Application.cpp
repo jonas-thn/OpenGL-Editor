@@ -2,6 +2,8 @@
 
 void Application::Init()
 {
+	lastFrame = SDL_GetTicks();
+
 	display.emplace(800, 600, "OpenGL PBR");
 	running = display->Init();
 
@@ -61,6 +63,8 @@ void Application::ProcessInput()
 
 void Application::Update()
 {
+	deltaTime = (SDL_GetTicks() - lastFrame) / 1000.0f; 
+	lastFrame = SDL_GetTicks();
 }
 
 void Application::Render()
