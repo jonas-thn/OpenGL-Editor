@@ -36,7 +36,7 @@ void GUI::Render(unsigned int fboTexture, Display& display)
 
 	ImGui::Begin("OpenGL Viewport");
 
-	ImGui::Image((void*)(intptr_t)fboTexture, ImVec2((float)display.GetWidth(), (float)display.GetHeight()), ImVec2(0, 1), ImVec2(1, 0));
+	ImGui::Image((void*)(intptr_t)fboTexture, ImVec2((float)display.GetWidth() / 2, (float)display.GetHeight() / 2), ImVec2(0, 1), ImVec2(1, 0));
 
 	ImGui::End();
 

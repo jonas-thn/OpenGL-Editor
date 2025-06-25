@@ -11,7 +11,10 @@ void Application::Init()
 	gui->Init();
 
 	simpleShader.emplace("shaders/simple.vert", "shaders/simple.frag");
+
 	triangle.Init();
+
+	material.emplace(0, "./Textures/brickwall.jpg");
 }
 
 void Application::Setup()
@@ -72,7 +75,7 @@ void Application::Render()
 	//FIRST PASS
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 	display->Clear(1, 1, 1, 1);
-	triangle.Draw(simpleShader.value());
+	triangle.Draw(simpleShader.value(), material.value());
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	//SECOND PASS	

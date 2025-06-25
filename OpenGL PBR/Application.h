@@ -14,6 +14,7 @@
 #include "ImGui/imgui_impl_opengl3.h"
 #include "Mesh.h"
 #include "data.h"
+#include "Material.h"
 
 class Application
 {
@@ -43,5 +44,7 @@ private:
 
 	std::optional<Shader> simpleShader;
 	Mesh triangle = Mesh(std::vector<float>(std::begin(quadVertices), std::end(quadVertices)), std::vector<unsigned int>(std::begin(quadIndices), std::end(quadIndices)));
+
+	std::optional<Material> material;
 };
 
