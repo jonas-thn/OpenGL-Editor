@@ -1,9 +1,5 @@
 #include "GUI.h"
 
-#include "ImGui/imgui.h"
-#include "ImGui/imgui_impl_sdl2.h"
-#include "ImGui/imgui_impl_opengl3.h"
-
 GUI::~GUI()
 {
 	ImGui_ImplOpenGL3_Shutdown();
@@ -21,6 +17,8 @@ void GUI::Init()
 
 	ImGui_ImplSDL2_InitForOpenGL(window, glContext);
 	ImGui_ImplOpenGL3_Init("#version 130");
+
+	CalculateImageData();
 }
 
 void GUI::ProcessEvent(SDL_Event& event)
@@ -34,17 +32,32 @@ void GUI::Render(unsigned int fboTexture, Display& display)
 	ImGui_ImplSDL2_NewFrame();
 	ImGui::NewFrame();
 
-	ImGui::SetNextWindowSize(ImVec2((float)display.GetWidth() / 2, (float)display.GetHeight() / 2), ImGuiCond_Once);
+	ImGui::SetNextWindowSize(ImVec2(imageData.textureWidth, imageData.textureHeight), ImGuiCond_Once);
 	ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_Once);
 
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
 	ImGuiWindowFlags flags = ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse;
 	ImGui::Begin("OpenGL Viewport", nullptr, flags);
 
-	ImGui::Image((void*)(intptr_t)fboTexture, ImVec2((float)display.GetWidth() / 2, (float)display.GetHeight() / 2), ImVec2(0, 1), ImVec2(1, 0));
+	ImGui::Image((void*)(intptr_t)fboTexture, ImVec2(imageData.textureWidth, imageData.textureHeight), imageData.uv0, imageData.uv1);
 
 	ImGui::End();
+	ImGui::PopStyleVar();
 
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+}
+
+void GUI::CalculateImageData()
+{
+	imageData.bottomLeft = bottomLeft;
+	imageData.topRight = topRight;
+
+	imageData.uv0 = ImVec2(bottomLeft.x, 1.0f - topRight.y);
+	imageData.uv1 = ImVec2(topRight.x, 1.0f - bottomLeft.y);
+
+	imageData.aspectRatio = (topRight.x - bottomLeft.x) / (topRight.y - bottomLeft.y);
+	imageData.textureWidth = height * imageData.aspectRatio;
+	imageData.textureHeight = height;
 }
 
