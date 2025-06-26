@@ -74,7 +74,7 @@ void Application::Render()
 {
 	//FIRST PASS
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-	display->Clear(1, 1, 1, 1);
+	display->Clear(0.05, 0.05, 0.05, 1);
 	triangle.Draw(simpleShader.value(), material.value());
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 

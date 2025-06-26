@@ -39,8 +39,10 @@ private:
 	SDL_GLContext glContext;
 
 	ImageData imageData;
-	ImVec2 bottomLeft = ImVec2(0.0f, 0.0f);
-	ImVec2 topRight = ImVec2(1.0f, 1.0f);
-	float height = 400.0f;
+	ImVec2 bottomLeft = ImVec2(0.1f, 0.0f);
+	ImVec2 topRight = ImVec2(0.9f, 1.0f);
+	float height = 600.0f;
+	float windowSplit = 200.0f;
+	ImVec4 hightlightColor = ImVec4(0.2f, 0.2f, 0.2f, 1.0f);
 };
 
