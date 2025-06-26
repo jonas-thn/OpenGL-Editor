@@ -36,6 +36,28 @@ void Mesh::Rotate(float angle, const glm::vec3& axis)
 	model = glm::rotate(model, glm::radians(angle), axis);
 }
 
+void Mesh::Scale(glm::vec3 scale)
+{
+	model = glm::scale(model, scale);
+}
+
+void Mesh::ResetScale()
+{
+	glm::vec3 scale;
+	scale.x = glm::length(glm::vec3(model[0])); 
+	scale.y = glm::length(glm::vec3(model[1])); 
+	scale.z = glm::length(glm::vec3(model[2])); 
+
+	glm::mat4 result = model;
+	result[0] = glm::vec4(glm::normalize(glm::vec3(model[0])), 0.0f);
+	result[1] = glm::vec4(glm::normalize(glm::vec3(model[1])), 0.0f);
+	result[2] = glm::vec4(glm::normalize(glm::vec3(model[2])), 0.0f);
+
+	result[3] = model[3];
+
+	model = result;
+}
+
 void Mesh::Draw(Shader& shader, Material& material, glm::mat4& view, glm::mat4& projection) const
 {
 	if (vertices.empty()) return;

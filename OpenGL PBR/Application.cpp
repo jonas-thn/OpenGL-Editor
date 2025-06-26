@@ -26,7 +26,17 @@ void Application::Setup()
 		glm::vec3(0.0f, 1.0f, 0.0f)  // up
 	);
 
-	projection = glm::perspective(glm::radians(45.0f), (float)display->GetWidth() / (float)display->GetHeight(), 0.1f, 100.0f);
+	ortho = DataTransfer::Instance().GetOrtho();
+
+	if(ortho)
+	{
+		projection = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, 0.1f, 100.0f);
+
+	}
+	else
+	{
+		projection = glm::perspective(glm::radians(45.0f), (float)display->GetWidth() / (float)display->GetHeight(), 0.1f, 100.0f);
+	}
 
 	//FRAMEBUFFER
 	glGenFramebuffers(1, &fbo);
@@ -80,9 +90,9 @@ void Application::Update()
 
 	triangle.Rotate(deltaTime * 50, glm::vec3(0, 1, 0));
 
-	if (DataTransfer::Instance().changed)
+	if (DataTransfer::Instance().distanceChanged)
 	{
-		DataTransfer::Instance().changed = false;
+		DataTransfer::Instance().distanceChanged = false;
 
 		distance = DataTransfer::Instance().GetDistance();
 		
@@ -91,6 +101,24 @@ void Application::Update()
 			glm::vec3(0.0f, 0.0f, 0.0f), // look at
 			glm::vec3(0.0f, 1.0f, 0.0f)  // up
 		);
+	}
+
+	if (DataTransfer::Instance().orthoisChanged)
+	{
+		DataTransfer::Instance().orthoisChanged = false;
+
+		ortho = DataTransfer::Instance().GetOrtho();
+
+		if (ortho)
+		{
+			projection = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, 0.1f, 100.0f);
+			triangle.ResetScale();
+		}
+		else
+		{
+			projection = glm::perspective(glm::radians(45.0f), (float)display->GetWidth() / (float)display->GetHeight(), 0.1f, 100.0f);
+			triangle.Scale(glm::vec3(1.0, 0.8, 1.0));
+		}
 	}
 }
 

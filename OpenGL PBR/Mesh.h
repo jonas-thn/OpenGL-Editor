@@ -7,6 +7,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/matrix_decompose.hpp>
+#include <glm/gtx/transform.hpp>
 
 class Mesh
 {
@@ -16,6 +18,8 @@ public:
 	void Init();
 
 	void Rotate(float angle, const glm::vec3& axis);
+	void Scale(glm::vec3 scale);
+	void ResetScale();
 
 	void Draw(Shader& shader, Material& material, glm::mat4& view, glm::mat4& projection) const;
 

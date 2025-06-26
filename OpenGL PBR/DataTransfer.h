@@ -13,13 +13,11 @@ public:
     void UpdateVertices(const std::vector<float>& newVertices) 
     {
         vertices = newVertices;
-		changed = true;
 	}
 
     void UpdateIndices(const std::vector<unsigned int>& newIndices)
     {
         indices = newIndices;
-		changed = true;
     }
 
     const std::vector<float>& GetVertices() const 
@@ -40,18 +38,32 @@ public:
     void SetDistance(float newDistance)
     {
         distance = newDistance;
-		changed = true;
+		distanceChanged = true;
+    }
+
+    void SetOrtho(bool isOrtho)
+    {
+		if (isOrtho == ortho) return;
+
+        ortho = isOrtho;
+		distanceChanged = true;
+    }
+
+    bool GetOrtho() const
+    {
+        return ortho;
     }
 
     DataTransfer(const DataTransfer&) = delete;
 	DataTransfer& operator=(const DataTransfer&) = delete;
     
-	bool changed = false;
+	bool distanceChanged = false;
+	bool orthoisChanged = false;
 private:
     std::vector<float> vertices;
     std::vector<unsigned int> indices;
     float distance = 2.0f;
-
+    bool ortho = false;
 
     DataTransfer() = default;
 };

@@ -83,10 +83,26 @@ void GUI::SettingsWindow(Display& display)
 
 	ImGui::Begin("Object Settings", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove);
 
-	static float myValue = DataTransfer::Instance().GetDistance();
-	ImGui::SliderFloat("Distance", &myValue, 1.0f, 5.0f, "%.3f");
-	DataTransfer::Instance().SetDistance(myValue);
-	DataTransfer::Instance().changed = true;
+	static float dist = DataTransfer::Instance().GetDistance();
+	if(ImGui::SliderFloat("Distance", &dist, 1.0f, 5.0f, "%.3f"))
+	{
+		DataTransfer::Instance().SetDistance(dist);
+		DataTransfer::Instance().distanceChanged = true;
+	}
+
+	ImGui::Dummy(ImVec2(0.0f, 10.0f));
+
+	bool orthoTemp = DataTransfer::Instance().GetOrtho();
+	static bool ortho = DataTransfer::Instance().GetOrtho();
+	ImGui::Text("Enable Orthographic: ");
+	ImGui::SameLine();
+	ImGui::Checkbox("##switch", &ortho);
+	
+	if(ortho != orthoTemp)
+	{
+		DataTransfer::Instance().SetOrtho(ortho);
+		DataTransfer::Instance().orthoisChanged = true;
+	}
 
 	ImGui::End();
 }
