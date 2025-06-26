@@ -47,9 +47,12 @@ private:
 	ImVec2 topRight = ImVec2(0.9f, 1.0f);
 	float height = 600.0f;
 	float windowSplit = 200.0f;
-	ImVec4 hightlightColor = ImVec4(0.2f, 0.2f, 0.2f, 1.0f);
-	ImVec4 textColor = ImVec4(0.5f, 0.5f, 0.5f, 1.0f);
 
-
+	ImVec4 blackColor = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
+	ImVec4 grey02Color = ImVec4(0.2f, 0.2f, 0.2f, 1.0f);
+	ImVec4 grey04Color = ImVec4(0.4f, 0.4f, 0.4f, 1.0f);
+	ImVec4 grey06Color = ImVec4(0.6f, 0.6f, 0.6f, 1.0f);
+	ImVec4 grey08Color = ImVec4(0.8f, 0.8f, 0.8f, 1.0f);
+	ImVec4 whiteColor = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
 };
 

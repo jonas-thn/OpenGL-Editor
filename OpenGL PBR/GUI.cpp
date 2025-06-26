@@ -36,7 +36,7 @@ void GUI::Render(unsigned int fboTexture, Display& display)
 	ImGui::NewFrame();
 
 	ImGuiStyle& style = ImGui::GetStyle();
-	style.Colors[ImGuiCol_TitleBgActive] = hightlightColor;
+	style.Colors[ImGuiCol_TitleBgActive] = grey02Color;
 
 	ViewportWindow(fboTexture);
 	
@@ -83,6 +83,12 @@ void GUI::SettingsWindow(Display& display)
 
 	ImGui::Begin("Object Settings", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove);
 
+	ImGui::GetStyle().Colors[ImGuiCol_SliderGrab] = grey08Color;
+	ImGui::GetStyle().Colors[ImGuiCol_SliderGrabActive] = whiteColor;
+	ImGui::GetStyle().Colors[ImGuiCol_FrameBg] = grey02Color;
+	ImGui::GetStyle().Colors[ImGuiCol_FrameBgHovered] = grey04Color;
+	ImGui::GetStyle().Colors[ImGuiCol_FrameBgActive] = grey06Color;
+
 	static float dist = DataTransfer::Instance().GetDistance();
 	if(ImGui::SliderFloat("Distance", &dist, 1.0f, 5.0f, "%.3f"))
 	{
@@ -91,6 +97,11 @@ void GUI::SettingsWindow(Display& display)
 	}
 
 	ImGui::Dummy(ImVec2(0.0f, 10.0f));
+
+	ImGui::GetStyle().Colors[ImGuiCol_CheckMark] = whiteColor;
+	ImGui::GetStyle().Colors[ImGuiCol_FrameBg] = grey02Color;
+	ImGui::GetStyle().Colors[ImGuiCol_FrameBgHovered] = grey04Color;
+	ImGui::GetStyle().Colors[ImGuiCol_FrameBgActive] = grey06Color;
 
 	bool orthoTemp = DataTransfer::Instance().GetOrtho();
 	static bool ortho = DataTransfer::Instance().GetOrtho();
@@ -128,7 +139,7 @@ void GUI::PropertiesWindow(Display& display)
 		for (int i = 0; i < vertices.size(); i++)
 		{
 			if(i % 5 != 0) ImGui::SameLine();
-			ImGui::TextColored(textColor, "%.1f ", vertices[i]);
+			ImGui::TextColored(grey06Color, "%.1f ", vertices[i]);
 		}
 
 		ImGui::Dummy(ImVec2(0.0f, 10.0f));
@@ -138,7 +149,7 @@ void GUI::PropertiesWindow(Display& display)
 		for(int i = 0; i < indices.size(); i++)
 		{
 			if(i != 0) ImGui::SameLine();
-			ImGui::TextColored(textColor, "%u ", indices[i]);
+			ImGui::TextColored(grey06Color, "%u ", indices[i]);
 		}
 	}
 

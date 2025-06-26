@@ -36,6 +36,7 @@ void Application::Setup()
 	else
 	{
 		projection = glm::perspective(glm::radians(45.0f), (float)display->GetWidth() / (float)display->GetHeight(), 0.1f, 100.0f);
+		triangle.Scale(glm::vec3(1.0, 0.8, 1.0));
 	}
 
 	//FRAMEBUFFER
