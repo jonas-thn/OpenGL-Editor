@@ -2,6 +2,7 @@
 
 #include <GL/glew.h>
 
+#include "DataTransfer.h"
 
 void Mesh::Init()
 {
@@ -25,6 +26,9 @@ void Mesh::Init()
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
 
 	glBindVertexArray(0);
+
+	DataTransfer::Instance().UpdateVertices(vertices);
+	DataTransfer::Instance().UpdateIndices(indices);
 }
 
 void Mesh::Draw(Shader& shader, Material& material) const

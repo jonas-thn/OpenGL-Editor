@@ -138,6 +138,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="DataTransfer.cpp" />
     <ClCompile Include="Display.cpp" />
     <ClCompile Include="GUI.cpp" />
     <ClCompile Include="ImGui\imgui.cpp" />
@@ -155,6 +156,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="DataTransfer.h" />
     <ClInclude Include="Display.h" />
     <ClInclude Include="GUI.h" />
     <ClInclude Include="ImGui\imconfig.h" />

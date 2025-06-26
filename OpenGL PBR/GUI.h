@@ -35,6 +35,10 @@ public:
 private:
 	void CalculateImageData();
 
+	void ViewportWindow(unsigned int fboTexture);
+	void SettingsWindow(Display& display);
+	void PropertiesWindow(Display& display);
+
 	SDL_Window* window;
 	SDL_GLContext glContext;
 
@@ -44,5 +48,9 @@ private:
 	float height = 600.0f;
 	float windowSplit = 200.0f;
 	ImVec4 hightlightColor = ImVec4(0.2f, 0.2f, 0.2f, 1.0f);
+	ImVec4 textColor = ImVec4(0.5f, 0.5f, 0.5f, 1.0f);
+	ImGuiWindowFlags flags = ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove;
+
+
 };
 
