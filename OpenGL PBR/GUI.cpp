@@ -1,5 +1,6 @@
 #include "GUI.h"
 #include <vector>
+
 #include "DataTransfer.h"
 
 GUI::~GUI()
@@ -81,6 +82,11 @@ void GUI::SettingsWindow(Display& display)
 	ImGui::SetNextWindowPos(ImVec2(imageData.textureWidth, 0), ImGuiCond_Once);
 
 	ImGui::Begin("Object Settings", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove);
+
+	static float myValue = DataTransfer::Instance().GetDistance();
+	ImGui::SliderFloat("Distance", &myValue, 1.0f, 5.0f, "%.3f");
+	DataTransfer::Instance().SetDistance(myValue);
+	DataTransfer::Instance().changed = true;
 
 	ImGui::End();
 }

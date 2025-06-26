@@ -1,4 +1,5 @@
 #include "Application.h"
+#include "DataTransfer.h"
 
 void Application::Init()
 {
@@ -20,7 +21,7 @@ void Application::Init()
 void Application::Setup()
 {
 	view = glm::lookAt(
-		glm::vec3(0.0f, 0.0f, 3.0f), // cam pos
+		glm::vec3(0.0f, 0.0f, distance), // cam pos
 		glm::vec3(0.0f, 0.0f, 0.0f), // look at
 		glm::vec3(0.0f, 1.0f, 0.0f)  // up
 	);
@@ -78,6 +79,19 @@ void Application::Update()
 	lastFrame = SDL_GetTicks();
 
 	triangle.Rotate(deltaTime * 50, glm::vec3(0, 1, 0));
+
+	if (DataTransfer::Instance().changed)
+	{
+		DataTransfer::Instance().changed = false;
+
+		distance = DataTransfer::Instance().GetDistance();
+		
+		view = glm::lookAt(
+			glm::vec3(0.0f, 0.0f, distance), // cam pos
+			glm::vec3(0.0f, 0.0f, 0.0f), // look at
+			glm::vec3(0.0f, 1.0f, 0.0f)  // up
+		);
+	}
 }
 
 void Application::Render()
