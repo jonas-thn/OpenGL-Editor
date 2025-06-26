@@ -31,11 +31,19 @@ void Mesh::Init()
 	DataTransfer::Instance().UpdateIndices(indices);
 }
 
-void Mesh::Draw(Shader& shader, Material& material) const
+void Mesh::Rotate(float angle, const glm::vec3& axis)
+{
+	model = glm::rotate(model, glm::radians(angle), axis);
+}
+
+void Mesh::Draw(Shader& shader, Material& material, glm::mat4& view, glm::mat4& projection) const
 {
 	if (vertices.empty()) return;
 
 	shader.UseShader();
+	shader.SetMat4("model", model);
+	shader.SetMat4("view", view);
+	shader.SetMat4("projection", projection);
 	material.UseMaterial(shader);
 	glBindVertexArray(VAO);
 	if (indices.empty())

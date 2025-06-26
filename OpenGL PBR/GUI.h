@@ -49,7 +49,6 @@ private:
 	float windowSplit = 200.0f;
 	ImVec4 hightlightColor = ImVec4(0.2f, 0.2f, 0.2f, 1.0f);
 	ImVec4 textColor = ImVec4(0.5f, 0.5f, 0.5f, 1.0f);
-	ImGuiWindowFlags flags = ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove;
 
 
 };

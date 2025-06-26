@@ -16,6 +16,10 @@
 #include "data.h"
 #include "Material.h"
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 class Application
 {
 public:
@@ -46,5 +50,9 @@ private:
 	Mesh triangle = Mesh(std::vector<float>(std::begin(quadVertices), std::end(quadVertices)), std::vector<unsigned int>(std::begin(quadIndices), std::end(quadIndices)));
 
 	std::optional<Material> material;
+
+	glm::mat4 projection = glm::mat4(1.0f);
+	glm::mat4 view = glm::mat4(1.0f);
+	int distance = 3;
 };
 

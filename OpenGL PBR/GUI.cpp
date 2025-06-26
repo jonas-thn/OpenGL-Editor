@@ -67,7 +67,7 @@ void GUI::ViewportWindow(unsigned int fboTexture)
 
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
 	
-	ImGui::Begin("OpenGL Viewport", nullptr, flags);
+	ImGui::Begin("OpenGL Viewport", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove);
 
 	ImGui::Image((void*)(intptr_t)fboTexture, ImVec2(imageData.textureWidth, imageData.textureHeight), imageData.uv0, imageData.uv1);
 
@@ -80,7 +80,7 @@ void GUI::SettingsWindow(Display& display)
 	ImGui::SetNextWindowSize(ImVec2(display.GetWidth() - imageData.textureWidth, display.GetHeight() - windowSplit), ImGuiCond_Once);
 	ImGui::SetNextWindowPos(ImVec2(imageData.textureWidth, 0), ImGuiCond_Once);
 
-	ImGui::Begin("Object Settings", nullptr, flags);
+	ImGui::Begin("Object Settings", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove);
 
 	ImGui::End();
 }
@@ -90,7 +90,7 @@ void GUI::PropertiesWindow(Display& display)
 	ImGui::SetNextWindowSize(ImVec2(display.GetWidth() - imageData.textureWidth, windowSplit), ImGuiCond_Once);
 	ImGui::SetNextWindowPos(ImVec2(imageData.textureWidth, display.GetHeight() - windowSplit), ImGuiCond_Once);
 
-	ImGui::Begin("Properties", nullptr, flags);
+	ImGui::Begin("Properties", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove);
 
 	std::vector<float> vertices = DataTransfer::Instance().GetVertices();
 	std::vector<unsigned int> indices = DataTransfer::Instance().GetIndices();
@@ -110,6 +110,7 @@ void GUI::PropertiesWindow(Display& display)
 		}
 
 		ImGui::Dummy(ImVec2(0.0f, 10.0f));
+
 		ImGui::Text("Indices (%zu):", indices.size());
 
 		for(int i = 0; i < indices.size(); i++)

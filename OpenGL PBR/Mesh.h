@@ -4,6 +4,9 @@
 #include "Shader.h"
 #include "Material.h"
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 class Mesh
 {
@@ -11,7 +14,10 @@ public:
 	Mesh(std::vector<float> vertices, std::vector<unsigned int> indices = {}) : vertices(vertices), indices(indices) {}
 	~Mesh() = default;
 	void Init();
-	void Draw(Shader& shader, Material& material) const;
+
+	void Rotate(float angle, const glm::vec3& axis);
+
+	void Draw(Shader& shader, Material& material, glm::mat4& view, glm::mat4& projection) const;
 
 private:
 	std::vector<float> vertices;
@@ -19,5 +25,7 @@ private:
 	unsigned int VBO;
 	unsigned int VAO;
 	unsigned int EBO;
+
+	glm::mat4 model = glm::mat4(1.0f);
 };
 
