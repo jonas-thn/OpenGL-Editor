@@ -1,12 +1,15 @@
 #pragma once
 #include <vector>
 
+#include "ImGui/imgui.h"
+
 enum ChangedFlags : uint32_t
 {
     NONE_CHANGED = 0,
     DISTANCE_CHANGED = 1 << 0,
     ORTHO_CHANGED = 1 << 1,
     MESH_CHANGED = 1 << 2,
+    COLOR_CHANGED = 1 << 3
 };
 
 enum class MeshSelection
@@ -79,6 +82,16 @@ public:
         if (selection == meshSelection) return;
         meshSelection = selection;
     }
+
+    ImVec4 GetColor()
+    {
+        return selectedColor;
+    }
+
+    void SetColor(ImVec4 color)
+    {
+        selectedColor = color;
+    }
     
     void SetChanged(ChangedFlags flag)
     {
@@ -111,6 +124,7 @@ private:
     float distance = 2.0f;
     bool ortho = false;
     MeshSelection meshSelection = MeshSelection::Cube;
+    ImVec4 selectedColor = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
 
     DataTransfer() = default;
 };

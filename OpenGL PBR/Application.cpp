@@ -118,7 +118,6 @@ void Application::Update()
 		{
 			projection = glm::perspective(glm::radians(45.0f), (float)display->GetWidth() / (float)display->GetHeight(), 0.1f, 100.0f);
 			currentMesh->SetScale(glm::vec3(1.0, 0.8, 1.0));
-
 		}
 		else
 		{			
@@ -130,8 +129,6 @@ void Application::Update()
 
 	if (DataTransfer::Instance().HasChanged(MESH_CHANGED))
 	{
-		printf("Mesh changed!\n");	
-
 		DataTransfer::Instance().ClearChanged(MESH_CHANGED);
 
 		MeshSelection meshSelection = DataTransfer::Instance().GetMeshSelection();
@@ -161,6 +158,13 @@ void Application::Update()
 		DataTransfer::Instance().UpdateVertices(currentMesh->GetVertices());
 		DataTransfer::Instance().UpdateIndices(currentMesh->GetIndices());
 	}
+
+	if (DataTransfer::Instance().HasChanged(COLOR_CHANGED))
+	{
+		DataTransfer::Instance().ClearChanged(COLOR_CHANGED);
+
+		color = DataTransfer::Instance().GetColor();
+	}
 }
 
 void Application::Render()
@@ -168,7 +172,7 @@ void Application::Render()
 	//FIRST PASS
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 	display->Clear(0.05, 0.05, 0.05, 1);
-	currentMesh->Draw(simpleShader.value(), material.value(), view, projection);
+	currentMesh->Draw(simpleShader.value(), material.value(), view, projection, glm::vec3(color.x, color.y, color.z));
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	//SECOND PASS	

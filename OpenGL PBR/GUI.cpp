@@ -52,8 +52,8 @@ void GUI::CalculateImageData()
 	imageData.bottomLeft = bottomLeft;
 	imageData.topRight = topRight;
 
-	imageData.uv0 = ImVec2(bottomLeft.x, 1.0f - topRight.y);
-	imageData.uv1 = ImVec2(topRight.x, 1.0f - bottomLeft.y);
+	imageData.uv0 = ImVec2(bottomLeft.x, 1.0f - bottomLeft.y);
+	imageData.uv1 = ImVec2(topRight.x, 1.0f - topRight.y);
 
 	imageData.aspectRatio = (topRight.x - bottomLeft.x) / (topRight.y - bottomLeft.y);
 	imageData.textureWidth = height * imageData.aspectRatio;
@@ -107,7 +107,7 @@ void GUI::ViewportWindow(unsigned int fboTexture)
 
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
 	
-	ImGui::Begin("OpenGL Viewport", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove);
+	ImGui::Begin("OpenGL Viewport", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollWithMouse);
 
 	ImGui::Image((void*)(intptr_t)fboTexture, ImVec2(imageData.textureWidth, imageData.textureHeight), imageData.uv0, imageData.uv1);
 
@@ -167,6 +167,17 @@ void GUI::SettingsWindow(Display& display)
 		}
 
 		DataTransfer::Instance().SetChanged(MESH_CHANGED);
+	}
+
+	ImGui::Dummy(ImVec2(0.0f, 10.0f));
+
+	//ColorPicker
+	static ImVec4 pickedColor(1.0f, 1.0f, 1.0f, 1.0f);
+
+	if (ImGui::ColorPicker4("Color", (float*)&pickedColor))
+	{
+		DataTransfer::Instance().SetChanged(COLOR_CHANGED);
+		DataTransfer::Instance().SetColor(pickedColor);
 	}
 
 	ImGui::End();

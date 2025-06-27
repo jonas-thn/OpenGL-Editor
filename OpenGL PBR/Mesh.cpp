@@ -69,7 +69,7 @@ void Mesh::SetScale(glm::vec3 scale)
 	}
 }
 
-void Mesh::Draw(Shader& shader, Material& material, glm::mat4& view, glm::mat4& projection) const
+void Mesh::Draw(Shader& shader, Material& material, glm::mat4& view, glm::mat4& projection, glm::vec3 color) const
 {
 	if (vertices.empty()) return;
 
@@ -77,6 +77,7 @@ void Mesh::Draw(Shader& shader, Material& material, glm::mat4& view, glm::mat4& 
 	shader.SetMat4("model", model);
 	shader.SetMat4("view", view);
 	shader.SetMat4("projection", projection);
+	shader.SetVec3("color", color);
 	material.UseMaterial(shader);
 	glBindVertexArray(VAO);
 	if (indices.empty())
