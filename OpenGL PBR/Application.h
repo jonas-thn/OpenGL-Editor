@@ -46,15 +46,20 @@ private:
 	unsigned int fboTexture;
 	unsigned int fboDepth;
 
+	//Shader
 	std::optional<Shader> simpleShader;
-	Mesh triangle = Mesh(std::vector<float>(std::begin(quadVertices), std::end(quadVertices)), std::vector<unsigned int>(std::begin(quadIndices), std::end(quadIndices)));
 
+	//Objects
+	Mesh quad = Mesh(std::vector<float>(std::begin(quadVertices), std::end(quadVertices)), std::vector<unsigned int>(std::begin(quadIndices), std::end(quadIndices)));
+	Mesh cube = Mesh(std::vector<float>(std::begin(cubeVertices), std::end(cubeVertices)));
+
+	//Materials
 	std::optional<Material> material;
 
+	//Extra
 	glm::mat4 projection = glm::mat4(1.0f);
 	glm::mat4 view = glm::mat4(1.0f);
 	float distance = 2.0f;
-
 	bool ortho = false;
 };
 

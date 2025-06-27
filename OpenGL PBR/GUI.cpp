@@ -128,9 +128,9 @@ void GUI::PropertiesWindow(Display& display)
 	std::vector<float> vertices = DataTransfer::Instance().GetVertices();
 	std::vector<unsigned int> indices = DataTransfer::Instance().GetIndices();
 
-	if(vertices.empty() || indices.empty())
+	if(vertices.empty())
 	{
-		ImGui::Text("No object loaded.");
+		ImGui::Text("No object loaded");
 	}
 	else
 	{
@@ -144,13 +144,20 @@ void GUI::PropertiesWindow(Display& display)
 
 		ImGui::Dummy(ImVec2(0.0f, 10.0f));
 
-		ImGui::Text("Indices (%zu):", indices.size());
-
-		for(int i = 0; i < indices.size(); i++)
+		if (indices.empty())
 		{
-			if(i != 0) ImGui::SameLine();
-			ImGui::TextColored(grey06Color, "%u ", indices[i]);
+			ImGui::Text("Indices (0): NULL");
 		}
+		else
+		{
+			ImGui::Text("Indices (%zu):", indices.size());
+
+			for (int i = 0; i < indices.size(); i++)
+			{
+				if (i != 0) ImGui::SameLine();
+				ImGui::TextColored(grey06Color, "%u ", indices[i]);
+			}
+		}		
 	}
 
 	ImGui::End();

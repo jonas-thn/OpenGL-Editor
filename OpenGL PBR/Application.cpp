@@ -11,10 +11,14 @@ void Application::Init()
 	gui.emplace(display->GetWindow(), display->GetGLContext());
 	gui->Init();
 
+	//Shaders
 	simpleShader.emplace("shaders/simple.vert", "shaders/simple.frag");
 
-	triangle.Init();
+	//Objects
+	quad.Init();
+	cube.Init();
 
+	//Materials
 	material.emplace(0, "./Textures/brickwall.jpg");
 }
 
@@ -36,7 +40,8 @@ void Application::Setup()
 	else
 	{
 		projection = glm::perspective(glm::radians(45.0f), (float)display->GetWidth() / (float)display->GetHeight(), 0.1f, 100.0f);
-		triangle.Scale(glm::vec3(1.0, 0.8, 1.0));
+		//quad.SetScale(glm::vec3(1.0, 0.8, 1.0));
+		cube.SetScale(glm::vec3(1.0, 0.8, 1.0));
 	}
 
 	//FRAMEBUFFER
@@ -59,6 +64,8 @@ void Application::Setup()
 		std::cout << "ERROR: Framebuffer is not complete!" << std::endl;
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	glEnable(GL_DEPTH_TEST);
 }
 
 void Application::ProcessInput()
@@ -89,7 +96,8 @@ void Application::Update()
 	deltaTime = (SDL_GetTicks() - lastFrame) / 1000.0f; 
 	lastFrame = SDL_GetTicks();
 
-	triangle.Rotate(deltaTime * 50, glm::vec3(0, 1, 0));
+	//quad.Rotate(deltaTime * 50, glm::vec3(0, 1, 0));
+	cube.Rotate(deltaTime * 50, glm::vec3(0, 1, 0));
 
 	if (DataTransfer::Instance().distanceChanged)
 	{
@@ -102,7 +110,10 @@ void Application::Update()
 			glm::vec3(0.0f, 0.0f, 0.0f), // look at
 			glm::vec3(0.0f, 1.0f, 0.0f)  // up
 		);
+
+		DataTransfer::Instance().orthoisChanged = true;
 	}
+	
 
 	if (DataTransfer::Instance().orthoisChanged)
 	{
@@ -110,15 +121,19 @@ void Application::Update()
 
 		ortho = DataTransfer::Instance().GetOrtho();
 
-		if (ortho)
-		{
-			projection = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, 0.1f, 100.0f);
-			triangle.ResetScale();
-		}
-		else
+		if (!ortho)
 		{
 			projection = glm::perspective(glm::radians(45.0f), (float)display->GetWidth() / (float)display->GetHeight(), 0.1f, 100.0f);
-			triangle.Scale(glm::vec3(1.0, 0.8, 1.0));
+			//quad.SetScale(glm::vec3(1.0, 0.8, 1.0));
+			cube.SetScale(glm::vec3(1.0, 0.8, 1.0));
+
+		}
+		else
+		{			
+			float newDistance = distance * 0.5f;
+			projection = glm::ortho(-newDistance, newDistance, -newDistance, newDistance, 0.1f, 100.0f);
+			//cube.ResetScale();
+			cube.ResetScale();
 		}
 	}
 }
@@ -128,7 +143,8 @@ void Application::Render()
 	//FIRST PASS
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 	display->Clear(0.05, 0.05, 0.05, 1);
-	triangle.Draw(simpleShader.value(), material.value(), view, projection);
+	//quad.Draw(simpleShader.value(), material.value(), view, projection);
+	cube.Draw(simpleShader.value(), material.value(), view, projection);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	//SECOND PASS	
