@@ -15,7 +15,7 @@ class Mesh
 public:
 	Mesh(std::vector<float> vertices, std::vector<unsigned int> indices = {}) : vertices(vertices), indices(indices) {}
 	~Mesh() = default;
-	void Init();
+	void Init(glm::vec3 lightPos, int doubleLighting = 0);
 
 	void Rotate(float angle, const glm::vec3& axis);
 	void ResetScale();
@@ -34,5 +34,8 @@ private:
 	unsigned int EBO;
 
 	glm::mat4 model = glm::mat4(1.0f);
+
+	glm::vec3 lightPosition;
+	int doubleLighting = 0;
 };
 

@@ -118,7 +118,7 @@ void GUI::ViewportWindow(unsigned int fboTexture)
 
 void GUI::SettingsWindow(Display& display)
 {
-	ImGui::SetNextWindowSize(ImVec2(display.GetWidth() - imageData.textureWidth, display.GetHeight() - windowSplit), ImGuiCond_Once);
+	ImGui::SetNextWindowSize(ImVec2(display.GetWidth() - imageData.textureWidth + 1, display.GetHeight() - windowSplit), ImGuiCond_Once);
 	ImGui::SetNextWindowPos(ImVec2(imageData.textureWidth, 0), ImGuiCond_Once);
 
 	ImGui::Begin("Object Settings", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove);
@@ -185,7 +185,7 @@ void GUI::SettingsWindow(Display& display)
 
 void GUI::PropertiesWindow(Display& display)
 {
-	ImGui::SetNextWindowSize(ImVec2(display.GetWidth() - imageData.textureWidth, windowSplit), ImGuiCond_Once);
+	ImGui::SetNextWindowSize(ImVec2(display.GetWidth() - imageData.textureWidth + 1, windowSplit), ImGuiCond_Once);
 	ImGui::SetNextWindowPos(ImVec2(imageData.textureWidth, display.GetHeight() - windowSplit), ImGuiCond_Once);
 
 	ImGui::Begin("Properties", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove);

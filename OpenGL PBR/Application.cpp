@@ -15,9 +15,9 @@ void Application::Init()
 	simpleShader.emplace("shaders/simple.vert", "shaders/simple.frag");
 
 	//Objects
-	triangle.Init();
-	quad.Init();
-	cube.Init();
+	triangle.Init(lightPosition, 1);
+	quad.Init(lightPosition, 1);
+	cube.Init(lightPosition);
 
 	//Materials
 	material.emplace(0, "./Textures/brickwall.jpg");

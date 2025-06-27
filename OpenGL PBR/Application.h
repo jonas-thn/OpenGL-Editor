@@ -64,5 +64,6 @@ private:
 	float distance = 2.0f;
 	bool ortho = false;
 	ImVec4 color = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
+	glm::vec3 lightPosition = glm::vec3(-0.0f, 1.0f, 1.0f);
 };
 

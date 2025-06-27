@@ -4,7 +4,7 @@
 
 #include "DataTransfer.h"
 
-void Mesh::Init()
+void Mesh::Init(glm::vec3 lightPos, int doubleLighting)
 {
 	if (vertices.empty()) return;
 
@@ -15,17 +15,23 @@ void Mesh::Init()
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 		glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
 
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
 		glEnableVertexAttribArray(0);
 
-		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
 		glEnableVertexAttribArray(1);
+
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+		glEnableVertexAttribArray(2);
 
 		glGenBuffers(1, &EBO);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
 
 	glBindVertexArray(0);
+
+	this->lightPosition = lightPos;
+	this->doubleLighting = doubleLighting;
 }
 
 void Mesh::Rotate(float angle, const glm::vec3& axis)
@@ -78,11 +84,13 @@ void Mesh::Draw(Shader& shader, Material& material, glm::mat4& view, glm::mat4& 
 	shader.SetMat4("view", view);
 	shader.SetMat4("projection", projection);
 	shader.SetVec3("color", color);
+	shader.SetVec3("lightPos", lightPosition);
+	shader.SetInt("doubleLighting", doubleLighting);
 	material.UseMaterial(shader);
 	glBindVertexArray(VAO);
 	if (indices.empty())
 	{
-		glDrawArrays(GL_TRIANGLES, 0, vertices.size() / 5);
+		glDrawArrays(GL_TRIANGLES, 0, vertices.size() / 8);
 	}
 	else
 	{
