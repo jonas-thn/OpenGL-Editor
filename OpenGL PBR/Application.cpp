@@ -15,6 +15,7 @@ void Application::Init()
 	simpleShader.emplace("shaders/simple.vert", "shaders/simple.frag");
 
 	//Objects
+	triangle.Init();
 	quad.Init();
 	cube.Init();
 
@@ -32,17 +33,8 @@ void Application::Setup()
 
 	ortho = DataTransfer::Instance().GetOrtho();
 
-	if(ortho)
-	{
-		projection = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, 0.1f, 100.0f);
-
-	}
-	else
-	{
-		projection = glm::perspective(glm::radians(45.0f), (float)display->GetWidth() / (float)display->GetHeight(), 0.1f, 100.0f);
-		//quad.SetScale(glm::vec3(1.0, 0.8, 1.0));
-		cube.SetScale(glm::vec3(1.0, 0.8, 1.0));
-	}
+	projection = glm::perspective(glm::radians(45.0f), (float)display->GetWidth() / (float)display->GetHeight(), 0.1f, 100.0f);
+	currentMesh->SetScale(glm::vec3(1.0, 0.8, 1.0));
 
 	//FRAMEBUFFER
 	glGenFramebuffers(1, &fbo);
@@ -66,6 +58,9 @@ void Application::Setup()
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	glEnable(GL_DEPTH_TEST);
+
+	DataTransfer::Instance().UpdateVertices(currentMesh->GetVertices());
+	DataTransfer::Instance().UpdateIndices(currentMesh->GetIndices());
 }
 
 void Application::ProcessInput()
@@ -96,12 +91,11 @@ void Application::Update()
 	deltaTime = (SDL_GetTicks() - lastFrame) / 1000.0f; 
 	lastFrame = SDL_GetTicks();
 
-	//quad.Rotate(deltaTime * 50, glm::vec3(0, 1, 0));
-	cube.Rotate(deltaTime * 50, glm::vec3(0, 1, 0));
+	currentMesh->Rotate(deltaTime * 50, glm::vec3(0, 1, 0));
 
-	if (DataTransfer::Instance().distanceChanged)
+	if (DataTransfer::Instance().HasChanged(DISTANCE_CHANGED))
 	{
-		DataTransfer::Instance().distanceChanged = false;
+		DataTransfer::Instance().ClearChanged(DISTANCE_CHANGED);
 
 		distance = DataTransfer::Instance().GetDistance();
 		
@@ -111,30 +105,61 @@ void Application::Update()
 			glm::vec3(0.0f, 1.0f, 0.0f)  // up
 		);
 
-		DataTransfer::Instance().orthoisChanged = true;
+		DataTransfer::Instance().SetChanged(ORTHO_CHANGED);
 	}
-	
 
-	if (DataTransfer::Instance().orthoisChanged)
+	if (DataTransfer::Instance().HasChanged(ORTHO_CHANGED))
 	{
-		DataTransfer::Instance().orthoisChanged = false;
+		DataTransfer::Instance().ClearChanged(ORTHO_CHANGED);
 
 		ortho = DataTransfer::Instance().GetOrtho();
 
 		if (!ortho)
 		{
 			projection = glm::perspective(glm::radians(45.0f), (float)display->GetWidth() / (float)display->GetHeight(), 0.1f, 100.0f);
-			//quad.SetScale(glm::vec3(1.0, 0.8, 1.0));
-			cube.SetScale(glm::vec3(1.0, 0.8, 1.0));
+			currentMesh->SetScale(glm::vec3(1.0, 0.8, 1.0));
 
 		}
 		else
 		{			
 			float newDistance = distance * 0.5f;
 			projection = glm::ortho(-newDistance, newDistance, -newDistance, newDistance, 0.1f, 100.0f);
-			//cube.ResetScale();
-			cube.ResetScale();
+			currentMesh->ResetScale();
 		}
+	}
+
+	if (DataTransfer::Instance().HasChanged(MESH_CHANGED))
+	{
+		printf("Mesh changed!\n");	
+
+		DataTransfer::Instance().ClearChanged(MESH_CHANGED);
+
+		MeshSelection meshSelection = DataTransfer::Instance().GetMeshSelection();
+
+		switch (meshSelection)
+		{
+		case MeshSelection::Triangle:
+			currentMesh = &triangle;
+			break;
+		case MeshSelection::Quad:
+			currentMesh = &quad;
+			break;
+		case MeshSelection::Cube:
+			currentMesh = &cube;
+			break;
+		}
+
+		if(DataTransfer::Instance().GetOrtho())
+		{
+			currentMesh->ResetScale();
+		}
+		else
+		{
+			currentMesh->SetScale(glm::vec3(1.0, 0.8, 1.0));
+		}
+
+		DataTransfer::Instance().UpdateVertices(currentMesh->GetVertices());
+		DataTransfer::Instance().UpdateIndices(currentMesh->GetIndices());
 	}
 }
 
@@ -143,8 +168,7 @@ void Application::Render()
 	//FIRST PASS
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 	display->Clear(0.05, 0.05, 0.05, 1);
-	//quad.Draw(simpleShader.value(), material.value(), view, projection);
-	cube.Draw(simpleShader.value(), material.value(), view, projection);
+	currentMesh->Draw(simpleShader.value(), material.value(), view, projection);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	//SECOND PASS	

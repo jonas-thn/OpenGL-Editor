@@ -21,6 +21,9 @@ public:
 	void ResetScale();
 	void SetScale(glm::vec3 scale);
 
+	std::vector<float>& GetVertices() { return vertices; }
+	std::vector<unsigned int>& GetIndices() { return indices; }
+
 	void Draw(Shader& shader, Material& material, glm::mat4& view, glm::mat4& projection) const;
 
 private:

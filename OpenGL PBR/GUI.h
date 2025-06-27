@@ -35,6 +35,7 @@ public:
 private:
 	void CalculateImageData();
 
+	void SetStyle();
 	void ViewportWindow(unsigned int fboTexture);
 	void SettingsWindow(Display& display);
 	void PropertiesWindow(Display& display);

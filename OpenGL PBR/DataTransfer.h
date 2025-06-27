@@ -1,6 +1,21 @@
 #pragma once
 #include <vector>
 
+enum ChangedFlags : uint32_t
+{
+    NONE_CHANGED = 0,
+    DISTANCE_CHANGED = 1 << 0,
+    ORTHO_CHANGED = 1 << 1,
+    MESH_CHANGED = 1 << 2,
+};
+
+enum class MeshSelection
+{
+    Triangle,
+    Quad,
+    Cube,
+};
+
 class DataTransfer 
 {
 public:
@@ -38,7 +53,7 @@ public:
     void SetDistance(float newDistance)
     {
         distance = newDistance;
-		distanceChanged = true;
+		SetChanged(ChangedFlags::DISTANCE_CHANGED);
     }
 
     void SetOrtho(bool isOrtho)
@@ -46,7 +61,7 @@ public:
 		if (isOrtho == ortho) return;
 
         ortho = isOrtho;
-		distanceChanged = true;
+		SetChanged(ChangedFlags::ORTHO_CHANGED);
     }
 
     bool GetOrtho() const
@@ -54,16 +69,48 @@ public:
         return ortho;
     }
 
+    MeshSelection GetMeshSelection() const
+    {
+        return meshSelection;
+	}
+
+    void SetMeshSelection(MeshSelection selection)
+    {
+        if (selection == meshSelection) return;
+        meshSelection = selection;
+    }
+    
+    void SetChanged(ChangedFlags flag)
+    {
+        changedFlags |= flag;
+    }
+
+    void ClearChanged(ChangedFlags flag)
+    {
+        changedFlags &= ~flag;
+    }
+
+    bool HasChanged(ChangedFlags flag) const
+    {
+        return (changedFlags & flag) != 0;
+    }
+
+    void ClearAll()
+    {
+        changedFlags = ChangedFlags::NONE_CHANGED;
+    }
+
     DataTransfer(const DataTransfer&) = delete;
 	DataTransfer& operator=(const DataTransfer&) = delete;
     
-	bool distanceChanged = false;
-	bool orthoisChanged = false;
+	uint32_t changedFlags = NONE_CHANGED;
+
 private:
     std::vector<float> vertices;
     std::vector<unsigned int> indices;
     float distance = 2.0f;
     bool ortho = false;
+    MeshSelection meshSelection = MeshSelection::Cube;
 
     DataTransfer() = default;
 };

@@ -35,8 +35,7 @@ void GUI::Render(unsigned int fboTexture, Display& display)
 	ImGui_ImplSDL2_NewFrame();
 	ImGui::NewFrame();
 
-	ImGuiStyle& style = ImGui::GetStyle();
-	style.Colors[ImGuiCol_TitleBgActive] = grey02Color;
+	SetStyle();
 
 	ViewportWindow(fboTexture);
 	
@@ -61,6 +60,46 @@ void GUI::CalculateImageData()
 	imageData.textureHeight = height;
 }
 
+void GUI::SetStyle()
+{
+	ImGuiStyle& style = ImGui::GetStyle();
+	style.Colors[ImGuiCol_FrameBg] = grey02Color;
+	style.Colors[ImGuiCol_FrameBgHovered] = grey04Color;
+	style.Colors[ImGuiCol_FrameBgActive] = grey06Color;
+	style.Colors[ImGuiCol_PopupBg] = grey02Color;
+	style.Colors[ImGuiCol_Border] = grey04Color;
+	style.Colors[ImGuiCol_BorderShadow] = blackColor;
+	style.Colors[ImGuiCol_Header] = grey04Color;
+	style.Colors[ImGuiCol_HeaderHovered] = grey06Color;
+	style.Colors[ImGuiCol_HeaderActive] = grey08Color;
+	style.Colors[ImGuiCol_Text] = whiteColor;
+	style.Colors[ImGuiCol_CheckMark] = whiteColor;
+	style.Colors[ImGuiCol_ScrollbarBg] = grey02Color;
+	style.Colors[ImGuiCol_ScrollbarGrab] = grey04Color;
+	style.Colors[ImGuiCol_ScrollbarGrabHovered] = grey06Color;
+	style.Colors[ImGuiCol_ScrollbarGrabActive] = grey08Color;
+	style.Colors[ImGuiCol_Button] = grey04Color;
+	style.Colors[ImGuiCol_SliderGrab] = grey08Color;
+	style.Colors[ImGuiCol_SliderGrabActive] = whiteColor;
+	style.Colors[ImGuiCol_ButtonHovered] = grey06Color;
+	style.Colors[ImGuiCol_ButtonActive] = grey08Color;
+	style.Colors[ImGuiCol_TextSelectedBg] = grey06Color;
+	style.Colors[ImGuiCol_Separator] = grey04Color;
+	style.Colors[ImGuiCol_SeparatorHovered] = grey06Color;
+	style.Colors[ImGuiCol_SeparatorActive] = grey08Color;
+	style.Colors[ImGuiCol_TitleBg] = grey02Color;
+	style.Colors[ImGuiCol_TitleBgActive] = grey04Color;
+	style.Colors[ImGuiCol_TitleBgCollapsed] = grey02Color;
+	style.Colors[ImGuiCol_ResizeGrip] = grey04Color;
+	style.Colors[ImGuiCol_ResizeGripHovered] = grey06Color;
+	style.Colors[ImGuiCol_ResizeGripActive] = grey08Color;
+	style.Colors[ImGuiCol_DragDropTarget] = grey08Color;
+	style.Colors[ImGuiCol_NavHighlight] = grey06Color;
+	style.Colors[ImGuiCol_NavWindowingHighlight] = grey06Color;
+	style.Colors[ImGuiCol_NavWindowingDimBg] = ImVec4(0, 0, 0, 0.4f);
+	style.Colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0, 0, 0, 0.4f);
+}
+
 void GUI::ViewportWindow(unsigned int fboTexture)
 {
 	ImGui::SetNextWindowSize(ImVec2(imageData.textureWidth, imageData.textureHeight), ImGuiCond_Once);
@@ -73,6 +112,7 @@ void GUI::ViewportWindow(unsigned int fboTexture)
 	ImGui::Image((void*)(intptr_t)fboTexture, ImVec2(imageData.textureWidth, imageData.textureHeight), imageData.uv0, imageData.uv1);
 
 	ImGui::End();
+
 	ImGui::PopStyleVar();
 }
 
@@ -83,26 +123,17 @@ void GUI::SettingsWindow(Display& display)
 
 	ImGui::Begin("Object Settings", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove);
 
-	ImGui::GetStyle().Colors[ImGuiCol_SliderGrab] = grey08Color;
-	ImGui::GetStyle().Colors[ImGuiCol_SliderGrabActive] = whiteColor;
-	ImGui::GetStyle().Colors[ImGuiCol_FrameBg] = grey02Color;
-	ImGui::GetStyle().Colors[ImGuiCol_FrameBgHovered] = grey04Color;
-	ImGui::GetStyle().Colors[ImGuiCol_FrameBgActive] = grey06Color;
-
+	//Distance
 	static float dist = DataTransfer::Instance().GetDistance();
 	if(ImGui::SliderFloat("Distance", &dist, 1.0f, 5.0f, "%.3f"))
 	{
 		DataTransfer::Instance().SetDistance(dist);
-		DataTransfer::Instance().distanceChanged = true;
+		DataTransfer::Instance().SetChanged(DISTANCE_CHANGED);
 	}
 
 	ImGui::Dummy(ImVec2(0.0f, 10.0f));
 
-	ImGui::GetStyle().Colors[ImGuiCol_CheckMark] = whiteColor;
-	ImGui::GetStyle().Colors[ImGuiCol_FrameBg] = grey02Color;
-	ImGui::GetStyle().Colors[ImGuiCol_FrameBgHovered] = grey04Color;
-	ImGui::GetStyle().Colors[ImGuiCol_FrameBgActive] = grey06Color;
-
+	//Orho
 	bool orthoTemp = DataTransfer::Instance().GetOrtho();
 	static bool ortho = DataTransfer::Instance().GetOrtho();
 	ImGui::Text("Enable Orthographic: ");
@@ -112,7 +143,30 @@ void GUI::SettingsWindow(Display& display)
 	if(ortho != orthoTemp)
 	{
 		DataTransfer::Instance().SetOrtho(ortho);
-		DataTransfer::Instance().orthoisChanged = true;
+		DataTransfer::Instance().SetChanged(ORTHO_CHANGED);
+	}
+
+	ImGui::Dummy(ImVec2(0.0f, 10.0f));
+
+	//Object Selection
+	const char* items[] = { "Triangle", "Quad", "Cube" };
+	static int selectedIndex = 2;
+	if (ImGui::Combo("Mesh", &selectedIndex, items, IM_ARRAYSIZE(items)))
+	{
+		switch (selectedIndex)
+		{
+		case 0:
+			DataTransfer::Instance().SetMeshSelection(MeshSelection::Triangle);
+			break;
+		case 1:
+			DataTransfer::Instance().SetMeshSelection(MeshSelection::Quad);
+			break;
+		case 2:
+			DataTransfer::Instance().SetMeshSelection(MeshSelection::Cube);
+			break;
+		}
+
+		DataTransfer::Instance().SetChanged(MESH_CHANGED);
 	}
 
 	ImGui::End();

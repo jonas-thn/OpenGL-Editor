@@ -26,9 +26,6 @@ void Mesh::Init()
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
 
 	glBindVertexArray(0);
-
-	DataTransfer::Instance().UpdateVertices(vertices);
-	DataTransfer::Instance().UpdateIndices(indices);
 }
 
 void Mesh::Rotate(float angle, const glm::vec3& axis)
