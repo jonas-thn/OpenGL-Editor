@@ -5,10 +5,10 @@ void Application::Init()
 {
 	lastFrame = SDL_GetTicks();
 
-	display.emplace(800, 600, "OpenGL Editor");
+	display.emplace(width, height, "OpenGL Editor");
 	running = display->Init();
 
-	gui.emplace(display->GetWindow(), display->GetGLContext());
+	gui.emplace(display->GetWindow(), display->GetGLContext(), height, 250);
 	gui->Init();
 
 	//Shaders

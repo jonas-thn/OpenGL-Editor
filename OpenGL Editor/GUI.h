@@ -26,7 +26,7 @@ class GUI
 {
 public:
 	GUI() = default;
-	GUI(SDL_Window* window, SDL_GLContext glContext) : window(window), glContext(glContext) {}
+	GUI(SDL_Window* window, SDL_GLContext glContext, float height, float windowSplit) : window(window), glContext(glContext), height(height), windowSplit(windowSplit) {}
 	~GUI();
 	void Init();
 	void ProcessEvent(SDL_Event& event);
@@ -44,10 +44,10 @@ private:
 	SDL_GLContext glContext;
 
 	ImageData imageData;
-	ImVec2 bottomLeft = ImVec2(0.1f, 0.0f);
-	ImVec2 topRight = ImVec2(0.9f, 1.0f);
-	float height = 600.0f;
-	float windowSplit = 200.0f;
+	ImVec2 bottomLeft = ImVec2(0.0f, 0.0f);
+	ImVec2 topRight = ImVec2(1.0f, 1.0f);
+	float height;
+	float windowSplit;
 
 	ImVec4 blackColor = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
 	ImVec4 grey02Color = ImVec4(0.2f, 0.2f, 0.2f, 1.0f);

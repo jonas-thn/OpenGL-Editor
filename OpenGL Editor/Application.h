@@ -64,6 +64,8 @@ private:
 	std::optional<Material> material;
 
 	//Extra
+	int width = 950;
+	int height = 700;
 	glm::mat4 projection = glm::mat4(1.0f);
 	glm::mat4 view = glm::mat4(1.0f);
 	float distance = 2.0f;
