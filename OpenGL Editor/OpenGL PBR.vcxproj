@@ -24,6 +24,7 @@
     <ProjectGuid>{9e236667-e309-443a-9dcc-799d692fbd3d}</ProjectGuid>
     <RootNamespace>OpenGLPBR</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>OpenGL Editor</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

@@ -5,7 +5,7 @@ void Application::Init()
 {
 	lastFrame = SDL_GetTicks();
 
-	display.emplace(800, 600, "OpenGL PBR");
+	display.emplace(800, 600, "OpenGL Editor");
 	running = display->Init();
 
 	gui.emplace(display->GetWindow(), display->GetGLContext());

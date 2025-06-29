@@ -2,7 +2,7 @@
 
 /* 
 TODO:
--Mesh importing
+-Custom Mesh importing
 -Post Processing
 -Skybox
 -Rotation
