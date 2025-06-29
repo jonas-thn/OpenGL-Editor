@@ -18,7 +18,11 @@ void Application::Init()
 	triangle.Init(lightPosition, 1);
 	quad.Init(lightPosition, 1);
 	cube.Init(lightPosition);
-	icoSphere.Init(lightPosition);
+	sphere.Init(lightPosition);
+	monkey.Init(lightPosition);
+	ring.Init(lightPosition);
+	cone.Init(lightPosition);
+	cylinder.Init(lightPosition);
 
 	//Materials
 	material.emplace(0, "./Textures/brickwall.jpg");
@@ -146,7 +150,19 @@ void Application::Update()
 			currentMesh = &cube;
 			break;
 		case MeshSelection::Sphere:
-			currentMesh = &icoSphere;
+			currentMesh = &sphere;
+			break;
+		case MeshSelection::Ring:
+			currentMesh = &ring;
+			break;
+		case MeshSelection::Cylinder:
+			currentMesh = &cylinder;
+			break;
+		case MeshSelection::Cone:
+			currentMesh = &cone;
+			break;
+		case MeshSelection::Monkey:
+			currentMesh = &monkey;
 			break;
 		}
 

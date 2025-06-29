@@ -149,7 +149,7 @@ void GUI::SettingsWindow(Display& display)
 	ImGui::Dummy(ImVec2(0.0f, 10.0f));
 
 	//Object Selection
-	const char* items[] = { "Triangle", "Quad", "Cube", "Sphere"};
+	const char* items[] = { "Triangle", "Quad", "Cube", "Sphere", "Ring", "Cone", "Cylinder", "Monkey"};
 	static int selectedIndex = 2;
 	if (ImGui::Combo("Mesh", &selectedIndex, items, IM_ARRAYSIZE(items)))
 	{
@@ -166,6 +166,18 @@ void GUI::SettingsWindow(Display& display)
 			break;
 		case 3:
 			DataTransfer::Instance().SetMeshSelection(MeshSelection::Sphere);
+			break;
+		case 4:
+			DataTransfer::Instance().SetMeshSelection(MeshSelection::Ring);
+			break;
+		case 5:
+			DataTransfer::Instance().SetMeshSelection(MeshSelection::Cone);
+			break;
+		case 6:
+			DataTransfer::Instance().SetMeshSelection(MeshSelection::Cylinder);
+			break;
+		case 7:
+			DataTransfer::Instance().SetMeshSelection(MeshSelection::Monkey);
 			break;
 		}
 

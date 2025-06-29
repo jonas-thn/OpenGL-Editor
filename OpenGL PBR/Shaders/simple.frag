@@ -25,7 +25,7 @@ void main()
 		norm = -norm;
 	}
 	vec3 lightDir = normalize(lightPos - FragPos);
-	float diff = max(dot(norm, lightDir), 0.0) + 0.3;
+	float diff = max(dot(norm, lightDir), 0.0) + 0.2;
 
 	FragColor = vec4(texture(material.diffuse, TexCoords).rgb * color * diff, 1.0);
 //	FragColor = vec4(color * diff, 1.0);

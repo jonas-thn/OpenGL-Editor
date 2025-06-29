@@ -17,7 +17,11 @@ enum class MeshSelection
     Triangle,
     Quad,
     Cube,
-    Sphere
+    Sphere,
+    Monkey,
+    Ring,
+    Cone,
+    Cylinder
 };
 
 class DataTransfer 
