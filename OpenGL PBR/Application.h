@@ -54,6 +54,7 @@ private:
 	Mesh triangle = Mesh(std::vector<float>(std::begin(triangleVertices), std::end(triangleVertices)));
 	Mesh quad = Mesh(std::vector<float>(std::begin(quadVertices), std::end(quadVertices)), std::vector<unsigned int>(std::begin(quadIndices), std::end(quadIndices)));
 	Mesh cube = Mesh(std::vector<float>(std::begin(cubeVertices), std::end(cubeVertices)));
+	Mesh icoSphere = Mesh("./Models/icosphere.obj");
 
 	//Materials
 	std::optional<Material> material;

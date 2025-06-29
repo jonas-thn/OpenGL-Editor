@@ -1,5 +1,14 @@
 #include "Application.h"
 
+/* 
+TODO:
+-Mesh importing
+-Post Processing
+-Skybox
+-Rotation
+-Vertex Edit Mode
+*/
+
 int main(int argc, char* argv[])
 {
 	Application app;

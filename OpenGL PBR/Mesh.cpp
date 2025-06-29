@@ -6,6 +6,12 @@
 
 void Mesh::Init(glm::vec3 lightPos, int doubleLighting)
 {
+	if (!path.empty())
+	{
+		LoadModel();
+		std::cout << "Vertices: " << vertices.size() << std::endl;
+	}
+
 	if (vertices.empty()) return;
 
 	glGenVertexArrays(1, &VAO);
@@ -98,5 +104,79 @@ void Mesh::Draw(Shader& shader, Material& material, glm::mat4& view, glm::mat4& 
 	}
 	glBindVertexArray(0);
 }
+
+void Mesh::LoadModel()
+{
+	Assimp::Importer import;
+
+	const aiScene* scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
+
+	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
+	{
+		std::cout << "Error Assimp: " << import.GetErrorString() << std::endl;
+		return;
+	}
+
+	ProcessNode(scene->mRootNode, scene);
+}
+
+void Mesh::ProcessNode(aiNode* node, const aiScene* scene)
+{
+	for (unsigned int i = 0; i < node->mNumMeshes; i++)
+	{
+		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
+		ProcessMesh(mesh, scene);
+	}
+
+	for (unsigned int i = 0; i < node->mNumChildren; i++)
+	{
+		ProcessNode(node->mChildren[i], scene);
+	}
+}
+
+void Mesh::ProcessMesh(aiMesh* mesh, const aiScene* scene)
+{
+	for (unsigned int i = 0; i < mesh->mNumVertices; i++)
+	{
+		vertices.push_back(mesh->mVertices[i].x);
+		vertices.push_back(mesh->mVertices[i].y);
+		vertices.push_back(mesh->mVertices[i].z);
+
+		if (mesh->HasNormals()) 
+		{
+			vertices.push_back(mesh->mNormals[i].x);
+			vertices.push_back(mesh->mNormals[i].y);
+			vertices.push_back(mesh->mNormals[i].z);
+		}
+		else 
+		{
+			vertices.push_back(0.0f);
+			vertices.push_back(0.0f);
+			vertices.push_back(0.0f);
+		}
+
+		if (mesh->mTextureCoords[0]) 
+		{
+			vertices.push_back(mesh->mTextureCoords[0][i].x);
+			vertices.push_back(mesh->mTextureCoords[0][i].y);
+		}
+		else 
+		{
+			vertices.push_back(0.0f);
+			vertices.push_back(0.0f);
+		}
+	}
+
+	for (unsigned int i = 0; i < mesh->mNumFaces; i++)
+	{
+		aiFace face = mesh->mFaces[i];
+		for (unsigned int j = 0; j < face.mNumIndices; j++)
+		{
+			indices.push_back(face.mIndices[j]);
+		}
+	}
+}
+
+
 	
 	

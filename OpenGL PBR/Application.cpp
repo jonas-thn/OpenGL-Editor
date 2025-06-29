@@ -18,6 +18,7 @@ void Application::Init()
 	triangle.Init(lightPosition, 1);
 	quad.Init(lightPosition, 1);
 	cube.Init(lightPosition);
+	icoSphere.Init(lightPosition);
 
 	//Materials
 	material.emplace(0, "./Textures/brickwall.jpg");
@@ -143,6 +144,9 @@ void Application::Update()
 			break;
 		case MeshSelection::Cube:
 			currentMesh = &cube;
+			break;
+		case MeshSelection::Sphere:
+			currentMesh = &icoSphere;
 			break;
 		}
 
