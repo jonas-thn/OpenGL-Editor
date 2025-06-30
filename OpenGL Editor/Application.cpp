@@ -26,7 +26,7 @@ void Application::Init()
 	cylinder.Init(lightPosition);
 
 	//Materials
-	material.emplace(0, "./Textures/brickwall.jpg");
+	material.emplace(GetNextTextureIndex(), "./Textures/brickwall.jpg", 0.0f);
 
 	skybox.emplace();
 }
@@ -195,6 +195,15 @@ void Application::Update()
 
 		skyboxActive = DataTransfer::Instance().GetSkybox();
 	}
+
+	if (DataTransfer::Instance().HasChanged(ROUGHNESS_CHANGED))
+	{
+		DataTransfer::Instance().ClearChanged(ROUGHNESS_CHANGED);
+
+		roughness = DataTransfer::Instance().GetRoughness();
+
+		material.value().UpdateRoughness(roughness);
+	}
 }
 
 void Application::Render()
@@ -205,19 +214,32 @@ void Application::Render()
 
 	if(skyboxActive)
 	{
-		skybox->Draw(*skyboxShader, view, projection, 5);
+		skybox->Draw(*skyboxShader, view, projection, GetNextTextureIndex());
 	}
 	
-	currentMesh->Draw(simpleShader.value(), material.value(), view, projection, glm::vec3(color.x, color.y, color.z));
+	currentMesh->Draw(simpleShader.value(), material.value(), view, projection, glm::vec3(color.x, color.y, color.z), 0, skybox->GetCubemapTexture(), distance);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	//SECOND PASS	
 	display->Clear(0, 0, 0, 1);
 	gui->Render(fboTexture, display.value());
 	display->SwapBuffers();
-
 }
 
 void Application::Cleanup()
 {
+}
+
+int Application::GetNextTextureIndex()
+{
+	static int number = 1;
+	if (number < 31)
+	{
+		return number++;
+	}
+	else
+	{
+		return 0;
+		std::cout << "Texture Index Error" << std::endl;
+	}
 }

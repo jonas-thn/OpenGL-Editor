@@ -77,5 +77,9 @@ private:
 	bool skyboxActive = false;
 
 	std::optional<Skybox> skybox;
+	float roughness;
+
+private:
+	int GetNextTextureIndex();
 };
 

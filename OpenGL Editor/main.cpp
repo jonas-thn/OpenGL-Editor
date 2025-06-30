@@ -3,10 +3,11 @@
 /* 
 TODO:
 -Custom Mesh importing
--Post Processing
+-Emission / Bloom
+-Normal Maps
+-Textures 
 -Skybox
--Rotation
--Vertex Edit Mode
+-Mouse Rotation
 */
 
 int main(int argc, char* argv[])

@@ -31,7 +31,7 @@ public:
 	std::vector<float>& GetVertices() { return vertices; }
 	std::vector<unsigned int>& GetIndices() { return indices; }
 
-	void Draw(Shader& shader, Material& material, glm::mat4& view, glm::mat4& projection, glm::vec3 color) const;
+	void Draw(Shader& shader, Material& material, glm::mat4& view, glm::mat4& projection, glm::vec3 color, int skyboxTextureIndex, unsigned int cubemapTexture, float distance) const;
 
 private:
 	void LoadModel();

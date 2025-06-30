@@ -228,6 +228,14 @@ void GUI::SettingsWindow(Display& display)
 
 	ImGui::Dummy(ImVec2(0.0f, 10.0f));
 
+	//Roughness
+	static float rough = DataTransfer::Instance().GetRoughness();
+	if (ImGui::SliderFloat("Roughness", &rough, 0.0f, 1.0f, "%.3f"))
+	{
+		DataTransfer::Instance().SetRoughness(rough);
+		DataTransfer::Instance().SetChanged(ROUGHNESS_CHANGED);
+	}
+
 	ImGui::End();
 }
 

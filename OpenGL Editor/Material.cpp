@@ -15,7 +15,7 @@ const int Material::textureIndices[32] =
 	GL_TEXTURE30, GL_TEXTURE31
 };
 
-Material::Material(int diffuseIndex, const char* diffusePath) : diffuseIndex(diffuseIndex)
+Material::Material(int diffuseIndex, const char* diffusePath, float roughness)
 {
 	stbi_set_flip_vertically_on_load(true);
 
@@ -55,6 +55,14 @@ Material::Material(int diffuseIndex, const char* diffusePath) : diffuseIndex(dif
 	glGenerateMipmap(GL_TEXTURE_2D);
 
 	stbi_image_free(data);
+
+	this->diffuseIndex = diffuseIndex;
+	this->roughness = roughness;
+}
+
+void Material::UpdateRoughness(float newRoughness)
+{
+	roughness = newRoughness;
 }
 
 Material::~Material()
@@ -67,4 +75,6 @@ void Material::UseMaterial(Shader& shader)
 	glActiveTexture(textureIndices[diffuseIndex]);
 	glBindTexture(GL_TEXTURE_2D, diffuseTexture);
 	shader.SetInt("material.diffuse", diffuseIndex);
+
+	shader.SetFloat("material.roughness", roughness);
 }

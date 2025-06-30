@@ -10,7 +10,8 @@ enum ChangedFlags : uint32_t
     ORTHO_CHANGED = 1 << 1,
     MESH_CHANGED = 1 << 2,
     COLOR_CHANGED = 1 << 3,
-    SKYBOX_CHANGED = 1 << 4
+    SKYBOX_CHANGED = 1 << 4,
+    ROUGHNESS_CHANGED = 1 << 5
 };
 
 enum class MeshSelection
@@ -108,6 +109,16 @@ public:
     {
         skybox = newSkybox;
     }
+
+    float GetRoughness()
+    {
+        return roughness;
+    }
+
+    void SetRoughness(float newRoughness)
+    {
+        roughness = newRoughness;
+    }
     
     void SetChanged(ChangedFlags flag)
     {
@@ -142,6 +153,7 @@ private:
     MeshSelection meshSelection = MeshSelection::Cube;
     ImVec4 selectedColor = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
     bool skybox = false;
+    float roughness = 0.0f;
 
     DataTransfer() = default;
 };
