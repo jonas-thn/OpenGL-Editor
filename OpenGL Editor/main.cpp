@@ -2,11 +2,10 @@
 
 /* 
 TODO:
-1. Mouse Rotation
-2. Emission / Bloom
-3. Custom Mesh importing
-4. Textures 
-5. Normal Maps
+1. Emission / Bloom
+2. Custom Mesh importing
+3. Textures 
+4. Normal Maps
 */
 
 int main(int argc, char* argv[])

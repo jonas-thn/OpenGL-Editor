@@ -124,16 +124,6 @@ void GUI::SettingsWindow(Display& display)
 
 	ImGui::Begin("Object Settings", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove);
 
-	//Distance
-	static float dist = DataTransfer::Instance().GetDistance();
-	if(ImGui::SliderFloat("Distance", &dist, 1.0f, 5.0f, "%.3f"))
-	{
-		DataTransfer::Instance().SetDistance(dist);
-		DataTransfer::Instance().SetChanged(DISTANCE_CHANGED);
-	}
-
-	ImGui::Dummy(ImVec2(0.0f, 10.0f));
-
 	//Orho
 	bool orthoTemp = DataTransfer::Instance().GetOrtho();
 	static bool ortho = DataTransfer::Instance().GetOrtho();

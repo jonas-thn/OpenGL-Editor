@@ -139,5 +139,7 @@
     <None Include="Shaders\skybox.vert" />
     <None Include="Shaders\background.vert" />
     <None Include="Shaders\background.frag" />
+    <None Include="Shaders\post.vert" />
+    <None Include="Shaders\post.frag" />
   </ItemGroup>
 </Project>

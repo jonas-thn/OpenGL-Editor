@@ -44,14 +44,19 @@ private:
 	std::optional<Display> display;
 	std::optional<GUI> gui;
 
-	unsigned int fbo;
-	unsigned int fboTexture;
-	unsigned int fboDepth;
+	unsigned int screenFBO;
+	unsigned int screenFBOTexture;
+	unsigned int screenFBODepth;
+
+	unsigned int postFBO;
+	unsigned int postFBOTexture;
+	unsigned int postFBODepth;
 
 	//Shader
 	std::optional<Shader> simpleShader;
 	std::optional<Shader> skyboxShader;
 	std::optional<Shader> backgroundShader;
+	std::optional<Shader> postShader;
 
 	//Objects
 	Mesh* currentMesh = &cube;
@@ -65,6 +70,7 @@ private:
 	Mesh cylinder = Mesh("./Models/cylinder.obj");
 
 	std::optional<Screen> background;
+	std::optional<Screen> postScreen;
 
 	//Materials
 	std::optional<Material> material;

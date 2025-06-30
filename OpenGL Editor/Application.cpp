@@ -15,6 +15,7 @@ void Application::Init()
 	simpleShader.emplace("shaders/simple.vert", "shaders/simple.frag");
 	skyboxShader.emplace("shaders/skybox.vert", "shaders/skybox.frag");
 	backgroundShader.emplace("shaders/background.vert", "shaders/background.frag");
+	postShader.emplace("shaders/post.vert", "shaders/post.frag");
 
 	//Objects
 	triangle.Init(lightPosition, 1);
@@ -48,21 +49,45 @@ void Application::Setup()
 	projection = glm::perspective(glm::radians(45.0f), (float)display->GetWidth() / (float)display->GetHeight(), 0.1f, 100.0f);
 	currentMesh->SetScale(glm::vec3(1.0, 1.0, 1.0));
 
-	//FRAMEBUFFER
-	glGenFramebuffers(1, &fbo);
-	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+	//SCREEN FRAMEBUFFER
+	glGenFramebuffers(1, &screenFBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, screenFBO);
 
-	glGenTextures(1, &fboTexture);
-	glBindTexture(GL_TEXTURE_2D, fboTexture);
+	glGenTextures(1, &screenFBOTexture);
+	glBindTexture(GL_TEXTURE_2D, screenFBOTexture);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, display->GetWidth(), display->GetHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, fboTexture, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, screenFBOTexture, 0);
 
-	glGenRenderbuffers(1, &fboDepth);
-	glBindRenderbuffer(GL_RENDERBUFFER, fboDepth);
+	glGenRenderbuffers(1, &screenFBODepth);
+	glBindRenderbuffer(GL_RENDERBUFFER, screenFBODepth);
 	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, display->GetWidth(), display->GetHeight());
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, fboDepth);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, screenFBODepth);
+
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		std::cout << "ERROR: Framebuffer is not complete!" << std::endl;
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	postScreen.emplace(std::vector<float>(std::begin(screenVertices), std::end(screenVertices)), GetNextTextureIndex(), screenFBOTexture);
+	postScreen->Init();
+
+	//POST FRAMEBUFFER
+	glGenFramebuffers(1, &postFBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, postFBO);
+
+	glGenTextures(1, &postFBOTexture);
+	glBindTexture(GL_TEXTURE_2D, postFBOTexture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, display->GetWidth(), display->GetHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, postFBOTexture, 0);
+
+	glGenRenderbuffers(1, &postFBODepth);
+	glBindRenderbuffer(GL_RENDERBUFFER, postFBODepth);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, display->GetWidth(), display->GetHeight());
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, postFBODepth);
 
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 		std::cout << "ERROR: Framebuffer is not complete!" << std::endl;
@@ -113,8 +138,13 @@ void Application::ProcessInput()
 		{
 			distance -= event.wheel.y * 0.1f;
 			distance = std::clamp(distance, 1.0f, 5.0f);
-			DataTransfer::Instance().SetDistance(distance);
-			DataTransfer::Instance().SetChanged(DISTANCE_CHANGED);
+			view = glm::lookAt(
+				glm::vec3(0.0f, 0.0f, distance), // cam pos
+				glm::vec3(0.0f, 0.0f, 0.0f), // look at
+				glm::vec3(0.0f, 1.0f, 0.0f)  // up
+			);
+
+			DataTransfer::Instance().SetChanged(ORTHO_CHANGED);
 		}
 	}
 }
@@ -123,23 +153,6 @@ void Application::Update()
 {
 	deltaTime = (SDL_GetTicks() - lastFrame) / 1000.0f; 
 	lastFrame = SDL_GetTicks();
-
-	//currentMesh->Rotate(deltaTime * 50, glm::vec3(0, 1, 0));
-
-	if (DataTransfer::Instance().HasChanged(DISTANCE_CHANGED))
-	{
-		DataTransfer::Instance().ClearChanged(DISTANCE_CHANGED);
-
-		distance = DataTransfer::Instance().GetDistance();
-		
-		view = glm::lookAt(
-			glm::vec3(0.0f, 0.0f, distance), // cam pos
-			glm::vec3(0.0f, 0.0f, 0.0f), // look at
-			glm::vec3(0.0f, 1.0f, 0.0f)  // up
-		);
-
-		DataTransfer::Instance().SetChanged(ORTHO_CHANGED);
-	}
 
 	if (DataTransfer::Instance().HasChanged(ORTHO_CHANGED))
 	{
@@ -233,8 +246,8 @@ void Application::Update()
 
 void Application::Render()
 {
-	//FIRST PASS
-	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+	//FIRST PASS - Scene
+	glBindFramebuffer(GL_FRAMEBUFFER, screenFBO);
 	display->Clear(0.05, 0.05, 0.05, 1);
 
 	if(skyboxActive)
@@ -245,9 +258,20 @@ void Application::Render()
 	currentMesh->Draw(simpleShader.value(), material.value(), view, projection, glm::vec3(color.x, color.y, color.z), 0, skybox->GetCubemapTexture(), distance);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	//SECOND PASS	
+	//SECOND PASS - Post
+	glBindFramebuffer(GL_FRAMEBUFFER, postFBO);
+	glDisable(GL_DEPTH_TEST);
+	display->Clear(0.05, 0.05, 0.05, 1);
+
+	postScreen->Draw(postShader.value());
+
+	glEnable(GL_DEPTH_TEST);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	//THIRD PASS - Gui
 	display->Clear(0, 0, 0, 1);
-	gui->Render(fboTexture, display.value());
+	gui->Render(postFBOTexture, display.value());
 	display->SwapBuffers();
 }
 

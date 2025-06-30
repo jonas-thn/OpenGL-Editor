@@ -184,6 +184,8 @@
   <ItemGroup>
     <None Include="Shaders\background.frag" />
     <None Include="Shaders\background.vert" />
+    <None Include="Shaders\post.frag" />
+    <None Include="Shaders\post.vert" />
     <None Include="Shaders\simple.frag" />
     <None Include="Shaders\simple.vert" />
     <None Include="Shaders\skybox.frag" />

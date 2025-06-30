@@ -6,12 +6,11 @@
 enum ChangedFlags : uint32_t
 {
     NONE_CHANGED = 0,
-    DISTANCE_CHANGED = 1 << 0,
-    ORTHO_CHANGED = 1 << 1,
-    MESH_CHANGED = 1 << 2,
-    COLOR_CHANGED = 1 << 3,
-    SKYBOX_CHANGED = 1 << 4,
-    ROUGHNESS_CHANGED = 1 << 5
+    ORTHO_CHANGED = 1 << 0,
+    MESH_CHANGED = 1 << 1,
+    COLOR_CHANGED = 1 << 2,
+    SKYBOX_CHANGED = 1 << 3,
+    ROUGHNESS_CHANGED = 1 << 4
 };
 
 enum class MeshSelection
@@ -53,17 +52,6 @@ public:
     const std::vector<unsigned int>& GetIndices() const 
     {
         return indices;
-    }
-
-    float GetDistance() const 
-    {
-        return distance;
-	}
-
-    void SetDistance(float newDistance)
-    {
-        distance = newDistance;
-		SetChanged(ChangedFlags::DISTANCE_CHANGED);
     }
 
     void SetOrtho(bool isOrtho)
@@ -148,7 +136,6 @@ public:
 private:
     std::vector<float> vertices;
     std::vector<unsigned int> indices;
-    float distance = 2.5f;
     bool ortho = false;
     MeshSelection meshSelection = MeshSelection::Cube;
     ImVec4 selectedColor = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
