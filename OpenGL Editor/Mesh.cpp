@@ -45,6 +45,15 @@ void Mesh::Rotate(float angle, const glm::vec3& axis)
 	model = glm::rotate(model, glm::radians(angle), axis);
 }
 
+void Mesh::RotateWorld(float dx, float dy, float sensitivity)
+{
+	glm::mat4 yawRotation = glm::rotate(glm::mat4(1.0f), glm::radians(dx * sensitivity), glm::vec3(0, 1, 0));
+	glm::mat4 pitchRotation = glm::rotate(glm::mat4(1.0f), glm::radians(dy * sensitivity), glm::vec3(1, 0, 0));
+
+	model = yawRotation * model;
+	model = pitchRotation * model;
+}
+
 void Mesh::ResetScale()
 {
 	glm::vec3 scale;

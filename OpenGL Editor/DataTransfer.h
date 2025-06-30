@@ -148,7 +148,7 @@ public:
 private:
     std::vector<float> vertices;
     std::vector<unsigned int> indices;
-    float distance = 2.0f;
+    float distance = 2.5f;
     bool ortho = false;
     MeshSelection meshSelection = MeshSelection::Cube;
     ImVec4 selectedColor = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);

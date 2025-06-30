@@ -25,6 +25,7 @@ public:
 	void Init(glm::vec3 lightPos, int doubleLighting = 0);
 
 	void Rotate(float angle, const glm::vec3& axis);
+	void RotateWorld(float dx, float dy, float sensitivity);
 	void ResetScale();
 	void SetScale(glm::vec3 scale);
 

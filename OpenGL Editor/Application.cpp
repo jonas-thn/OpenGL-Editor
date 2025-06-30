@@ -46,7 +46,7 @@ void Application::Setup()
 	ortho = DataTransfer::Instance().GetOrtho();
 
 	projection = glm::perspective(glm::radians(45.0f), (float)display->GetWidth() / (float)display->GetHeight(), 0.1f, 100.0f);
-	currentMesh->SetScale(glm::vec3(1.0, 0.8, 1.0));
+	currentMesh->SetScale(glm::vec3(1.0, 1.0, 1.0));
 
 	//FRAMEBUFFER
 	glGenFramebuffers(1, &fbo);
@@ -95,6 +95,27 @@ void Application::ProcessInput()
 				break;
 			}
 		}
+		if (event.type == SDL_MOUSEMOTION) 
+		{
+			int mouseX, mouseY;
+			int buttons = SDL_GetMouseState(&mouseX, &mouseY);
+
+			if ((buttons & SDL_BUTTON(SDL_BUTTON_LEFT)) && (mouseX > 0) && (mouseX < width - 250) && (mouseY > 0) && (mouseY < height))
+			{
+				int dx = event.motion.xrel;
+				int dy = event.motion.yrel;
+
+				currentMesh->RotateWorld(dx, dy, 0.3f);
+			}
+		}
+
+		if (event.type == SDL_MOUSEWHEEL) 
+		{
+			distance -= event.wheel.y * 0.1f;
+			distance = std::clamp(distance, 1.0f, 5.0f);
+			DataTransfer::Instance().SetDistance(distance);
+			DataTransfer::Instance().SetChanged(DISTANCE_CHANGED);
+		}
 	}
 }
 
@@ -103,7 +124,7 @@ void Application::Update()
 	deltaTime = (SDL_GetTicks() - lastFrame) / 1000.0f; 
 	lastFrame = SDL_GetTicks();
 
-	currentMesh->Rotate(deltaTime * 50, glm::vec3(0, 1, 0));
+	//currentMesh->Rotate(deltaTime * 50, glm::vec3(0, 1, 0));
 
 	if (DataTransfer::Instance().HasChanged(DISTANCE_CHANGED))
 	{
@@ -129,7 +150,7 @@ void Application::Update()
 		if (!ortho)
 		{
 			projection = glm::perspective(glm::radians(45.0f), (float)display->GetWidth() / (float)display->GetHeight(), 0.1f, 100.0f);
-			currentMesh->SetScale(glm::vec3(1.0, 0.8, 1.0));
+			currentMesh->SetScale(glm::vec3(1.0, 1.0, 1.0));
 		}
 		else
 		{			
@@ -179,7 +200,7 @@ void Application::Update()
 		}
 		else
 		{
-			currentMesh->SetScale(glm::vec3(1.0, 0.8, 1.0));
+			currentMesh->SetScale(glm::vec3(1.0, 1.0, 1.0));
 		}
 
 		DataTransfer::Instance().UpdateVertices(currentMesh->GetVertices());

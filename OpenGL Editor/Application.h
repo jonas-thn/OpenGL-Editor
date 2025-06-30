@@ -70,16 +70,15 @@ private:
 	std::optional<Material> material;
 
 	//Extra
-	int width = 950;
+	int width = 800;
 	int height = 700;
 	glm::mat4 projection = glm::mat4(1.0f);
 	glm::mat4 view = glm::mat4(1.0f);
-	float distance = 2.0f;
+	float distance = 2.5f;
 	bool ortho = false;
 	ImVec4 color = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
 	glm::vec3 lightPosition = glm::vec3(-0.0f, 1.0f, 1.0f);
 	bool skyboxActive = false;
-
 	std::optional<Skybox> skybox;
 	float roughness;
 

@@ -46,8 +46,8 @@ private:
 	SDL_GLContext glContext;
 
 	ImageData imageData;
-	ImVec2 bottomLeft = ImVec2(0.0f, 0.0f);
-	ImVec2 topRight = ImVec2(1.0f, 1.0f);
+	ImVec2 bottomLeft = ImVec2(0.1f, 0.0f);
+	ImVec2 topRight = ImVec2(0.9f, 1.0f);
 	float height;
 	float windowSplit;
 
