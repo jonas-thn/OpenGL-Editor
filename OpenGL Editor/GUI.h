@@ -9,6 +9,8 @@
 #include "ImGui/imgui_impl_sdl2.h"
 #include "ImGui/imgui_impl_opengl3.h"
 
+#include <algorithm>
+
 struct ImageData
 {
 	ImVec2 bottomLeft;

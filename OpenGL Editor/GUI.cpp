@@ -2,6 +2,7 @@
 #include <vector>
 
 #include "DataTransfer.h"
+#include "ImGui/imgui_internal.h"
 
 GUI::~GUI()
 {
@@ -187,12 +188,29 @@ void GUI::SettingsWindow(Display& display)
 	ImGui::Dummy(ImVec2(0.0f, 10.0f));
 
 	//ColorPicker
-	static ImVec4 pickedColor(1.0f, 1.0f, 1.0f, 1.0f);
+	static float pickedColor [3] { 1.0, 1.0, 1.0 };
+	static bool pickerOpen = false;
 
-	if (ImGui::ColorPicker4("Color", (float*)&pickedColor))
+	if(ImGui::Button("Base Color"))
 	{
-		DataTransfer::Instance().SetChanged(COLOR_CHANGED);
-		DataTransfer::Instance().SetColor(pickedColor);
+		pickerOpen = !pickerOpen;
+	}
+
+	ImGui::SameLine();
+	ImVec2 p0 = ImGui::GetCursorScreenPos(); 
+	ImVec2 p1 = ImVec2(p0.x + 40, p0.y + 19); 
+	ImU32 color = IM_COL32((pickedColor[0] * 255), (pickedColor[1] * 255), (pickedColor[2] * 255), 255);
+	ImGui::GetWindowDrawList()->AddRectFilled(p0, p1, color);
+	ImGui::NewLine();
+
+	if (pickerOpen)
+	{
+		if (ImGui::ColorPicker3("Color", pickedColor))
+		{
+			DataTransfer::Instance().SetChanged(COLOR_CHANGED);
+			ImVec4 colorData(pickedColor[0], pickedColor[1], pickedColor[2], 1.0);
+			DataTransfer::Instance().SetColor(colorData);
+		}
 	}
 
 	ImGui::End();
