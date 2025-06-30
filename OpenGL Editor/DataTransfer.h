@@ -9,7 +9,8 @@ enum ChangedFlags : uint32_t
     DISTANCE_CHANGED = 1 << 0,
     ORTHO_CHANGED = 1 << 1,
     MESH_CHANGED = 1 << 2,
-    COLOR_CHANGED = 1 << 3
+    COLOR_CHANGED = 1 << 3,
+    SKYBOX_CHANGED = 1 << 4
 };
 
 enum class MeshSelection
@@ -97,6 +98,16 @@ public:
     {
         selectedColor = color;
     }
+
+    bool GetSkybox() const
+    {
+        return skybox;
+    }
+
+    void SetSkybox(bool newSkybox)
+    {
+        skybox = newSkybox;
+    }
     
     void SetChanged(ChangedFlags flag)
     {
@@ -130,6 +141,7 @@ private:
     bool ortho = false;
     MeshSelection meshSelection = MeshSelection::Cube;
     ImVec4 selectedColor = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
+    bool skybox = false;
 
     DataTransfer() = default;
 };

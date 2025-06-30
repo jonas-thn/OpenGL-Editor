@@ -19,6 +19,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include "Skybox.h"
 
 class Application
 {
@@ -48,6 +49,7 @@ private:
 
 	//Shader
 	std::optional<Shader> simpleShader;
+	std::optional<Shader> skyboxShader;
 
 	//Objects
 	Mesh* currentMesh = &cube;
@@ -72,5 +74,8 @@ private:
 	bool ortho = false;
 	ImVec4 color = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
 	glm::vec3 lightPosition = glm::vec3(-0.0f, 1.0f, 1.0f);
+	bool skyboxActive = false;
+
+	std::optional<Skybox> skybox;
 };
 

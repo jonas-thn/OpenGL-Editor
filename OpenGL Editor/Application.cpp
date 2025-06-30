@@ -13,6 +13,7 @@ void Application::Init()
 
 	//Shaders
 	simpleShader.emplace("shaders/simple.vert", "shaders/simple.frag");
+	skyboxShader.emplace("shaders/skybox.vert", "shaders/skybox.frag");
 
 	//Objects
 	triangle.Init(lightPosition, 1);
@@ -26,6 +27,8 @@ void Application::Init()
 
 	//Materials
 	material.emplace(0, "./Textures/brickwall.jpg");
+
+	skybox.emplace();
 }
 
 void Application::Setup()
@@ -185,6 +188,13 @@ void Application::Update()
 
 		color = DataTransfer::Instance().GetColor();
 	}
+
+	if (DataTransfer::Instance().HasChanged(SKYBOX_CHANGED))
+	{
+		DataTransfer::Instance().ClearChanged(SKYBOX_CHANGED);
+
+		skyboxActive = DataTransfer::Instance().GetSkybox();
+	}
 }
 
 void Application::Render()
@@ -192,6 +202,12 @@ void Application::Render()
 	//FIRST PASS
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 	display->Clear(0.05, 0.05, 0.05, 1);
+
+	if(skyboxActive)
+	{
+		skybox->Draw(*skyboxShader, view, projection, 5);
+	}
+	
 	currentMesh->Draw(simpleShader.value(), material.value(), view, projection, glm::vec3(color.x, color.y, color.z));
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 

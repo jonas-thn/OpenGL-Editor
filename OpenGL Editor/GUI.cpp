@@ -137,9 +137,8 @@ void GUI::SettingsWindow(Display& display)
 	//Orho
 	bool orthoTemp = DataTransfer::Instance().GetOrtho();
 	static bool ortho = DataTransfer::Instance().GetOrtho();
-	ImGui::Text("Enable Orthographic: ");
-	ImGui::SameLine();
-	ImGui::Checkbox("##switch", &ortho);
+	
+	ImGui::Checkbox("Enable Orthographic", &ortho);
 	
 	if(ortho != orthoTemp)
 	{
@@ -212,6 +211,22 @@ void GUI::SettingsWindow(Display& display)
 			DataTransfer::Instance().SetColor(colorData);
 		}
 	}
+
+	ImGui::Dummy(ImVec2(0.0f, 10.0f));
+
+	//Skybox
+	bool skyboxTemp = DataTransfer::Instance().GetSkybox();
+	static bool skybox = DataTransfer::Instance().GetSkybox();
+	
+	ImGui::Checkbox("Enable Skybox", &skybox);
+
+	if (skybox != skyboxTemp)
+	{
+		DataTransfer::Instance().SetSkybox(skybox);
+		DataTransfer::Instance().SetChanged(SKYBOX_CHANGED);
+	}
+
+	ImGui::Dummy(ImVec2(0.0f, 10.0f));
 
 	ImGui::End();
 }
