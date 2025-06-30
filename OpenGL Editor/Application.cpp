@@ -14,6 +14,7 @@ void Application::Init()
 	//Shaders
 	simpleShader.emplace("shaders/simple.vert", "shaders/simple.frag");
 	skyboxShader.emplace("shaders/skybox.vert", "shaders/skybox.frag");
+	backgroundShader.emplace("shaders/background.vert", "shaders/background.frag");
 
 	//Objects
 	triangle.Init(lightPosition, 1);
@@ -24,6 +25,9 @@ void Application::Init()
 	ring.Init(lightPosition);
 	cone.Init(lightPosition);
 	cylinder.Init(lightPosition);
+
+	background.emplace(std::vector<float>(std::begin(screenVertices), std::end(screenVertices)), GetNextTextureIndex(), "./Textures/Cubemap/left.jpg");
+	background->Init();
 
 	//Materials
 	material.emplace(GetNextTextureIndex(), "./Textures/brickwall.jpg", 0.0f);
@@ -214,7 +218,7 @@ void Application::Render()
 
 	if(skyboxActive)
 	{
-		skybox->Draw(*skyboxShader, view, projection, GetNextTextureIndex());
+		background->Draw(backgroundShader.value());
 	}
 	
 	currentMesh->Draw(simpleShader.value(), material.value(), view, projection, glm::vec3(color.x, color.y, color.z), 0, skybox->GetCubemapTexture(), distance);

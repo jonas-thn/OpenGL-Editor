@@ -60,6 +60,9 @@
     <ClCompile Include="Material.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="Screen.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
     <ClCompile Include="Skybox.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -119,6 +122,9 @@
     <ClInclude Include="DataTransfer.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="Screen.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
     <ClInclude Include="Skybox.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -131,5 +137,7 @@
     <None Include="Shaders\simple.frag" />
     <None Include="Shaders\skybox.frag" />
     <None Include="Shaders\skybox.vert" />
+    <None Include="Shaders\background.vert" />
+    <None Include="Shaders\background.frag" />
   </ItemGroup>
 </Project>

@@ -2,12 +2,11 @@
 
 /* 
 TODO:
--Custom Mesh importing
--Emission / Bloom
--Normal Maps
--Textures 
--Skybox
--Mouse Rotation
+1. Mouse Rotation
+2. Emission / Bloom
+3. Custom Mesh importing
+4. Textures 
+5. Normal Maps
 */
 
 int main(int argc, char* argv[])

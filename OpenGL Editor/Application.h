@@ -20,6 +20,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include "Skybox.h"
+#include "Screen.h"
 
 class Application
 {
@@ -50,6 +51,7 @@ private:
 	//Shader
 	std::optional<Shader> simpleShader;
 	std::optional<Shader> skyboxShader;
+	std::optional<Shader> backgroundShader;
 
 	//Objects
 	Mesh* currentMesh = &cube;
@@ -61,6 +63,8 @@ private:
 	Mesh ring = Mesh("./Models/ring.obj");
 	Mesh cone = Mesh("./Models/cone.obj");
 	Mesh cylinder = Mesh("./Models/cylinder.obj");
+
+	std::optional<Screen> background;
 
 	//Materials
 	std::optional<Material> material;
