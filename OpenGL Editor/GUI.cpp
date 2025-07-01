@@ -125,6 +125,7 @@ void GUI::SettingsWindow(Display& display)
 	ImGui::Begin("Object Settings", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove);
 
 	//Object Selection
+	ImGui::SeparatorText("Mesh Selection");
 	const char* meshes[] = { "Triangle", "Quad", "Cube", "Sphere", "Ring", "Cone", "Cylinder", "Monkey" };
 	static int selectedIndexMesh = 2;
 	if (ImGui::Combo("Mesh", &selectedIndexMesh, meshes, IM_ARRAYSIZE(meshes)))
@@ -161,8 +162,42 @@ void GUI::SettingsWindow(Display& display)
 	}
 
 	ImGui::Dummy(ImVec2(0.0f, 10.0f));
-	ImGui::Separator();
 	ImGui::Dummy(ImVec2(0.0f, 10.0f));
+	ImGui::SeparatorText("Material Selection");
+
+	//Material Selection
+	const char* materials[] = { "None", "Brick", "Wood", "Conatiner", "Box", "Concrete"};
+	static int selectedIndexMaterial = 0;
+	if (ImGui::Combo("Material", &selectedIndexMaterial, materials, IM_ARRAYSIZE(materials)))
+	{
+		switch (selectedIndexMaterial)
+		{
+		case 0:
+			DataTransfer::Instance().SetMaterialSelection(MaterialSelection::None);
+			break;
+		case 1:
+			DataTransfer::Instance().SetMaterialSelection(MaterialSelection::Brick);
+			break;
+		case 2:
+			DataTransfer::Instance().SetMaterialSelection(MaterialSelection::Wood);
+			break;
+		case 3:
+			DataTransfer::Instance().SetMaterialSelection(MaterialSelection::Container);
+			break;
+		case 4:
+			DataTransfer::Instance().SetMaterialSelection(MaterialSelection::Box);
+			break;
+		case 5:
+			DataTransfer::Instance().SetMaterialSelection(MaterialSelection::Concrete);
+			break;
+		}
+
+		DataTransfer::Instance().SetChanged(MATERIAL_CHANGED);
+	}
+
+	ImGui::Dummy(ImVec2(0.0f, 10.0f));
+	ImGui::Dummy(ImVec2(0.0f, 10.0f));
+	ImGui::SeparatorText("Camera & Enviroment");
 
 	//Orho
 	bool orthoTemp = DataTransfer::Instance().GetOrtho();
@@ -191,8 +226,8 @@ void GUI::SettingsWindow(Display& display)
 	}
 
 	ImGui::Dummy(ImVec2(0.0f, 10.0f));
-	ImGui::Separator();
 	ImGui::Dummy(ImVec2(0.0f, 10.0f));
+	ImGui::SeparatorText("Visual Settings");
 
 	//ColorPicker
 	static float baseColor [3] { 1.0, 1.0, 1.0 };
@@ -267,31 +302,6 @@ void GUI::SettingsWindow(Display& display)
 		DataTransfer::Instance().SetChanged(EMISSION_RADIUS_CHANGED);
 	}
 
-	ImGui::Dummy(ImVec2(0.0f, 10.0f));
-	ImGui::Separator();
-	ImGui::Dummy(ImVec2(0.0f, 10.0f));
-
-	//Material Selection
-	const char* materials[] = { "Brick", "Wood", "Conatiner" };
-	static int selectedIndexMaterial = 0;
-	if (ImGui::Combo("Material", &selectedIndexMaterial, materials, IM_ARRAYSIZE(materials)))
-	{
-		switch (selectedIndexMaterial)
-		{
-		case 0:
-			DataTransfer::Instance().SetMaterialSelection(MaterialSelection::Brick);
-			break;
-		case 1:
-			DataTransfer::Instance().SetMaterialSelection(MaterialSelection::Wood);
-			break;
-		case 2:
-			DataTransfer::Instance().SetMaterialSelection(MaterialSelection::Container);
-			break;
-		}
-
-		DataTransfer::Instance().SetChanged(MATERIAL_CHANGED);
-	}
-
 	ImGui::End();
 }
 
@@ -331,7 +341,11 @@ void GUI::PropertiesWindow(Display& display)
 
 			for (int i = 0; i < indices.size(); i++)
 			{
-				if (i != 0) ImGui::SameLine();
+				if (i % 6 != 0) 
+				{
+					ImGui::SameLine();
+				}
+				
 				ImGui::TextColored(grey06Color, "%u ", indices[i]);
 			}
 		}		

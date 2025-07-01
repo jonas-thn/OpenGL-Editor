@@ -30,9 +30,12 @@ enum class MeshSelection
 
 enum class MaterialSelection
 {
+    None,
     Brick,
     Wood,
-    Container
+    Container,
+    Box,
+    Concrete
 };
 
 class DataTransfer 
@@ -184,7 +187,7 @@ private:
     float roughness = 0.0f;
     ImVec4 emissionColor = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
     float emissionRadius = 10;
-    MaterialSelection materialSelection = MaterialSelection::Brick;
+    MaterialSelection materialSelection = MaterialSelection::None;
 
     DataTransfer() = default;
 };

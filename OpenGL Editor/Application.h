@@ -74,11 +74,14 @@ private:
 	std::optional<Screen> postScreen;
 
 	//Materials
+	std::optional<Material> noMaterial;
 	std::optional<Material> brickMaterial;
 	std::optional<Material> containerMaterial;
 	std::optional<Material> woodMaterial;
+	std::optional<Material> concreteMaterial;
+	std::optional<Material> boxMaterial;
 
-	std::optional<Material>* currentMaterial = &brickMaterial;
+	std::optional<Material>* currentMaterial = &noMaterial;
 
 	//Extra
 	int width = 800;

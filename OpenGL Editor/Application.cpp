@@ -34,6 +34,10 @@ void Application::Init()
 	brickMaterial.emplace(GetNextTextureIndex(), "./Textures/brickwall.jpg", 0.0f);
 	containerMaterial.emplace(GetNextTextureIndex(), "./Textures/container2.png", 0.0f);
 	woodMaterial.emplace(GetNextTextureIndex(), "./Textures/wood.png", 0.0f);
+	boxMaterial.emplace(GetNextTextureIndex(), "./Textures/container.jpg", 0.0f);
+	concreteMaterial.emplace(GetNextTextureIndex(), "./Textures/concreteTexture.png", 0.0f);
+	noMaterial.emplace(GetNextTextureIndex(), "./Textures/white.png", 0.0f);
+
 
 	skybox.emplace();
 }
@@ -138,15 +142,21 @@ void Application::ProcessInput()
 
 		if (event.type == SDL_MOUSEWHEEL) 
 		{
-			distance -= event.wheel.y * 0.1f;
-			distance = std::clamp(distance, 1.0f, 5.0f);
-			view = glm::lookAt(
-				glm::vec3(0.0f, 0.0f, distance), // cam pos
-				glm::vec3(0.0f, 0.0f, 0.0f), // look at
-				glm::vec3(0.0f, 1.0f, 0.0f)  // up
-			);
+			int mouseX, mouseY;
+			int buttons = SDL_GetMouseState(&mouseX, &mouseY);
 
-			DataTransfer::Instance().SetChanged(ORTHO_CHANGED);
+			if((mouseX > 0) && (mouseX < width - 250) && (mouseY > 0) && (mouseY < height))
+			{
+				distance -= event.wheel.y * 0.1f;
+				distance = std::clamp(distance, 1.0f, 5.0f);
+				view = glm::lookAt(
+					glm::vec3(0.0f, 0.0f, distance), // cam pos
+					glm::vec3(0.0f, 0.0f, 0.0f), // look at
+					glm::vec3(0.0f, 1.0f, 0.0f)  // up
+				);
+
+				DataTransfer::Instance().SetChanged(ORTHO_CHANGED);
+			}
 		}
 	}
 }
@@ -275,6 +285,15 @@ void Application::Update()
 			break;
 		case MaterialSelection::Container:
 			currentMaterial = &containerMaterial;
+			break;
+		case MaterialSelection::None:
+			currentMaterial = &noMaterial;
+			break;
+		case MaterialSelection::Concrete:
+			currentMaterial = &concreteMaterial;
+			break;
+		case MaterialSelection::Box:
+			currentMaterial = &boxMaterial;
 			break;
 		}
 	}
