@@ -8,7 +8,7 @@ void Application::Init()
 	display.emplace(width, height, "OpenGL Editor");
 	running = display->Init();
 
-	gui.emplace(display->GetWindow(), display->GetGLContext(), height, 250);
+	gui.emplace(display->GetWindow(), display->GetGLContext(), height, 230);
 	gui->Init();
 
 	//Shaders
@@ -31,12 +31,13 @@ void Application::Init()
 	background->Init();
 
 	//Materials
-	brickMaterial.emplace(GetNextTextureIndex(), "./Textures/brickwall.jpg", 0.0f);
-	containerMaterial.emplace(GetNextTextureIndex(), "./Textures/container2.png", 0.0f);
-	woodMaterial.emplace(GetNextTextureIndex(), "./Textures/wood.png", 0.0f);
-	boxMaterial.emplace(GetNextTextureIndex(), "./Textures/container.jpg", 0.0f);
-	concreteMaterial.emplace(GetNextTextureIndex(), "./Textures/concreteTexture.png", 0.0f);
-	noMaterial.emplace(GetNextTextureIndex(), "./Textures/white.png", 0.0f);
+	int noNormalIndex = GetNextTextureIndex();
+	brickMaterial.emplace(GetNextTextureIndex(), "./Textures/brickwall.jpg", GetNextTextureIndex(), "./Textures/brickwall_normal.jpg", 0.0f);
+	containerMaterial.emplace(GetNextTextureIndex(), "./Textures/container2.png", noNormalIndex, "./Textures/no-normals.png", 0.0f);
+	woodMaterial.emplace(GetNextTextureIndex(), "./Textures/wood.png", noNormalIndex, "./Textures/no-normals.png", 0.0f);
+	boxMaterial.emplace(GetNextTextureIndex(), "./Textures/container.jpg", noNormalIndex, "./Textures/no-normals.png", 0.0f);
+	concreteMaterial.emplace(GetNextTextureIndex(), "./Textures/concreteTexture.png", noNormalIndex, "./Textures/no-normals.png", 0.0f);
+	noMaterial.emplace(GetNextTextureIndex(), "./Textures/white.png", noNormalIndex, "./Textures/no-normals.png", 0.0f);
 
 
 	skybox.emplace();

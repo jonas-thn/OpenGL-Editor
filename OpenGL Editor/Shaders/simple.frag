@@ -2,6 +2,7 @@
 
 struct Material
 {
+	sampler2D normalMap;
 	sampler2D diffuse;
 	float roughness;
 };
@@ -42,4 +43,5 @@ void main()
 
 	vec4 mixedColor = mix(diffuse, reflection, material.roughness);
 	FragColor = vec4(mixedColor + vec4(emissionColor * 2, 1.0f));
+	FragColor = vec4(texture(material.normalMap, TexCoords).rgb, 1.0);
 }

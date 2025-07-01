@@ -15,19 +15,11 @@ const int Material::textureIndices[32] =
 	GL_TEXTURE30, GL_TEXTURE31
 };
 
-Material::Material(int diffuseIndex, const char* diffusePath, float roughness)
+Material::Material(int diffuseIndex, const char* diffusePath, int normalIndex, const char* normalPath, float roughness)
 {
 	stbi_set_flip_vertically_on_load(true);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
-
 	float borderColor[] = { 1.0f, 1.0f, 0.0f, 1.0f };
-	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
 	int width, height, nChannels;
 	unsigned char* data = stbi_load(diffusePath, &width, &height, &nChannels, 0);
 
@@ -39,6 +31,48 @@ Material::Material(int diffuseIndex, const char* diffusePath, float roughness)
 	glGenTextures(1, &diffuseTexture);
 	glActiveTexture(textureIndices[diffuseIndex]);
 	glBindTexture(GL_TEXTURE_2D, diffuseTexture);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+
+	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	if (nChannels == 4)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+	}
+	else if (nChannels == 3)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+	}
+	else
+	{
+		std::cout << "nChannels Image Error." << std::endl;
+	}
+	glGenerateMipmap(GL_TEXTURE_2D);
+
+
+	data = stbi_load(normalPath, &width, &height, &nChannels, 0);
+
+	if (data == NULL)
+	{
+		std::cout << "Failed to load texture." << std::endl;
+	}
+
+	glGenTextures(1, &normalMap);
+	glActiveTexture(textureIndices[normalIndex]);
+	glBindTexture(GL_TEXTURE_2D, normalMap);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+
+	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 	if (nChannels == 4)
 	{
@@ -57,6 +91,7 @@ Material::Material(int diffuseIndex, const char* diffusePath, float roughness)
 	stbi_image_free(data);
 
 	this->diffuseIndex = diffuseIndex;
+	this->normalIndex = normalIndex;
 	this->roughness = roughness;
 }
 
@@ -75,6 +110,10 @@ void Material::UseMaterial(Shader& shader)
 	glActiveTexture(textureIndices[diffuseIndex]);
 	glBindTexture(GL_TEXTURE_2D, diffuseTexture);
 	shader.SetInt("material.diffuse", diffuseIndex);
+
+	glActiveTexture(textureIndices[normalIndex]);
+	glBindTexture(GL_TEXTURE_2D, normalMap);
+	shader.SetInt("material.normalMap", normalIndex);
 
 	shader.SetFloat("material.roughness", roughness);
 }
