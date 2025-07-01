@@ -124,26 +124,12 @@ void GUI::SettingsWindow(Display& display)
 
 	ImGui::Begin("Object Settings", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove);
 
-	//Orho
-	bool orthoTemp = DataTransfer::Instance().GetOrtho();
-	static bool ortho = DataTransfer::Instance().GetOrtho();
-	
-	ImGui::Checkbox("Enable Orthographic", &ortho);
-	
-	if(ortho != orthoTemp)
-	{
-		DataTransfer::Instance().SetOrtho(ortho);
-		DataTransfer::Instance().SetChanged(ORTHO_CHANGED);
-	}
-
-	ImGui::Dummy(ImVec2(0.0f, 10.0f));
-
 	//Object Selection
-	const char* items[] = { "Triangle", "Quad", "Cube", "Sphere", "Ring", "Cone", "Cylinder", "Monkey"};
-	static int selectedIndex = 2;
-	if (ImGui::Combo("Mesh", &selectedIndex, items, IM_ARRAYSIZE(items)))
+	const char* meshes[] = { "Triangle", "Quad", "Cube", "Sphere", "Ring", "Cone", "Cylinder", "Monkey" };
+	static int selectedIndexMesh = 2;
+	if (ImGui::Combo("Mesh", &selectedIndexMesh, meshes, IM_ARRAYSIZE(meshes)))
 	{
-		switch (selectedIndex)
+		switch (selectedIndexMesh)
 		{
 		case 0:
 			DataTransfer::Instance().SetMeshSelection(MeshSelection::Triangle);
@@ -175,6 +161,38 @@ void GUI::SettingsWindow(Display& display)
 	}
 
 	ImGui::Dummy(ImVec2(0.0f, 10.0f));
+	ImGui::Separator();
+	ImGui::Dummy(ImVec2(0.0f, 10.0f));
+
+	//Orho
+	bool orthoTemp = DataTransfer::Instance().GetOrtho();
+	static bool ortho = DataTransfer::Instance().GetOrtho();
+	
+	ImGui::Checkbox("Enable Orthographic", &ortho);
+	
+	if(ortho != orthoTemp)
+	{
+		DataTransfer::Instance().SetOrtho(ortho);
+		DataTransfer::Instance().SetChanged(ORTHO_CHANGED);
+	}
+
+	ImGui::Dummy(ImVec2(0.0f, 10.0f));
+
+	//Skybox
+	bool skyboxTemp = DataTransfer::Instance().GetSkybox();
+	static bool skybox = DataTransfer::Instance().GetSkybox();
+
+	ImGui::Checkbox("Enable Skybox", &skybox);
+
+	if (skybox != skyboxTemp)
+	{
+		DataTransfer::Instance().SetSkybox(skybox);
+		DataTransfer::Instance().SetChanged(SKYBOX_CHANGED);
+	}
+
+	ImGui::Dummy(ImVec2(0.0f, 10.0f));
+	ImGui::Separator();
+	ImGui::Dummy(ImVec2(0.0f, 10.0f));
 
 	//ColorPicker
 	static float baseColor [3] { 1.0, 1.0, 1.0 };
@@ -200,20 +218,6 @@ void GUI::SettingsWindow(Display& display)
 			ImVec4 colorData(baseColor[0], baseColor[1], baseColor[2], 1.0);
 			DataTransfer::Instance().SetColor(colorData);
 		}
-	}
-
-	ImGui::Dummy(ImVec2(0.0f, 10.0f));
-
-	//Skybox
-	bool skyboxTemp = DataTransfer::Instance().GetSkybox();
-	static bool skybox = DataTransfer::Instance().GetSkybox();
-	
-	ImGui::Checkbox("Enable Skybox", &skybox);
-
-	if (skybox != skyboxTemp)
-	{
-		DataTransfer::Instance().SetSkybox(skybox);
-		DataTransfer::Instance().SetChanged(SKYBOX_CHANGED);
 	}
 
 	ImGui::Dummy(ImVec2(0.0f, 10.0f));
@@ -257,10 +261,35 @@ void GUI::SettingsWindow(Display& display)
 	ImGui::Dummy(ImVec2(0.0f, 10.0f));
 
 	static float rad = DataTransfer::Instance().GetEmissionRadius();
-	if (ImGui::SliderFloat("Emission\nRadius", &rad, 1.0f, 20.0f, "%.3f"))
+	if (ImGui::SliderFloat("Emission\nRadius", &rad, 3.0f, 20.0f, "%.3f"))
 	{
 		DataTransfer::Instance().SetEmissionRadius(rad);
 		DataTransfer::Instance().SetChanged(EMISSION_RADIUS_CHANGED);
+	}
+
+	ImGui::Dummy(ImVec2(0.0f, 10.0f));
+	ImGui::Separator();
+	ImGui::Dummy(ImVec2(0.0f, 10.0f));
+
+	//Material Selection
+	const char* materials[] = { "Brick", "Wood", "Conatiner" };
+	static int selectedIndexMaterial = 0;
+	if (ImGui::Combo("Material", &selectedIndexMaterial, materials, IM_ARRAYSIZE(materials)))
+	{
+		switch (selectedIndexMaterial)
+		{
+		case 0:
+			DataTransfer::Instance().SetMaterialSelection(MaterialSelection::Brick);
+			break;
+		case 1:
+			DataTransfer::Instance().SetMaterialSelection(MaterialSelection::Wood);
+			break;
+		case 2:
+			DataTransfer::Instance().SetMaterialSelection(MaterialSelection::Container);
+			break;
+		}
+
+		DataTransfer::Instance().SetChanged(MATERIAL_CHANGED);
 	}
 
 	ImGui::End();

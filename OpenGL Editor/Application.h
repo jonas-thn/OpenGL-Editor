@@ -59,7 +59,6 @@ private:
 	std::optional<Shader> postShader;
 
 	//Objects
-	Mesh* currentMesh = &cube;
 	Mesh triangle = Mesh(std::vector<float>(std::begin(triangleVertices), std::end(triangleVertices)));
 	Mesh quad = Mesh(std::vector<float>(std::begin(quadVertices), std::end(quadVertices)), std::vector<unsigned int>(std::begin(quadIndices), std::end(quadIndices)));
 	Mesh cube = Mesh(std::vector<float>(std::begin(cubeVertices), std::end(cubeVertices)));
@@ -69,11 +68,17 @@ private:
 	Mesh cone = Mesh("./Models/cone.obj");
 	Mesh cylinder = Mesh("./Models/cylinder.obj");
 
+	Mesh* currentMesh = &cube;
+
 	std::optional<Screen> background;
 	std::optional<Screen> postScreen;
 
 	//Materials
-	std::optional<Material> material;
+	std::optional<Material> brickMaterial;
+	std::optional<Material> containerMaterial;
+	std::optional<Material> woodMaterial;
+
+	std::optional<Material>* currentMaterial = &brickMaterial;
 
 	//Extra
 	int width = 800;

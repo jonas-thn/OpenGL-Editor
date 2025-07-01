@@ -31,7 +31,9 @@ void Application::Init()
 	background->Init();
 
 	//Materials
-	material.emplace(GetNextTextureIndex(), "./Textures/brickwall.jpg", 0.0f);
+	brickMaterial.emplace(GetNextTextureIndex(), "./Textures/brickwall.jpg", 0.0f);
+	containerMaterial.emplace(GetNextTextureIndex(), "./Textures/container2.png", 0.0f);
+	woodMaterial.emplace(GetNextTextureIndex(), "./Textures/wood.png", 0.0f);
 
 	skybox.emplace();
 }
@@ -240,7 +242,7 @@ void Application::Update()
 
 		roughness = DataTransfer::Instance().GetRoughness();
 
-		material.value().UpdateRoughness(roughness);
+		currentMaterial->value().UpdateRoughness(roughness);
 	}
 
 	if (DataTransfer::Instance().HasChanged(EMISSION_COLOR_CHANGED))
@@ -256,6 +258,26 @@ void Application::Update()
 
 		emissionRadius = DataTransfer::Instance().GetEmissionRadius();
 	}
+
+	if (DataTransfer::Instance().HasChanged(MATERIAL_CHANGED))
+	{
+		DataTransfer::Instance().ClearChanged(MATERIAL_CHANGED);
+
+		MaterialSelection materialSelection = DataTransfer::Instance().GetMaterialSelection();
+
+		switch (materialSelection)
+		{
+		case MaterialSelection::Brick:
+			currentMaterial = &brickMaterial;
+			break;
+		case MaterialSelection::Wood:
+			currentMaterial = &woodMaterial;
+			break;
+		case MaterialSelection::Container:
+			currentMaterial = &containerMaterial;
+			break;
+		}
+	}
 }
 
 void Application::Render()
@@ -269,7 +291,7 @@ void Application::Render()
 		background->Draw(backgroundShader.value(), glm::vec3(emissionColor.x, emissionColor.y, emissionColor.z), emissionRadius);
 	}
 	
-	currentMesh->Draw(simpleShader.value(), material.value(), view, projection, glm::vec3(color.x, color.y, color.z), 0, skybox->GetCubemapTexture(), distance, glm::vec3(emissionColor.x, emissionColor.y, emissionColor.z));
+	currentMesh->Draw(simpleShader.value(), currentMaterial->value(), view, projection, glm::vec3(color.x, color.y, color.z), 0, skybox->GetCubemapTexture(), distance, glm::vec3(emissionColor.x, emissionColor.y, emissionColor.z));
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	//SECOND PASS - Post

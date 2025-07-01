@@ -12,7 +12,8 @@ enum ChangedFlags : uint32_t
     SKYBOX_CHANGED = 1 << 3,
     ROUGHNESS_CHANGED = 1 << 4,
     EMISSION_COLOR_CHANGED = 1 << 5,
-    EMISSION_RADIUS_CHANGED = 1 << 6
+    EMISSION_RADIUS_CHANGED = 1 << 6,
+    MATERIAL_CHANGED = 1 << 7
 };
 
 enum class MeshSelection
@@ -25,6 +26,13 @@ enum class MeshSelection
     Ring,
     Cone,
     Cylinder
+};
+
+enum class MaterialSelection
+{
+    Brick,
+    Wood,
+    Container
 };
 
 class DataTransfer 
@@ -78,6 +86,17 @@ public:
     {
         if (selection == meshSelection) return;
         meshSelection = selection;
+    }
+
+    MaterialSelection GetMaterialSelection() const
+    {
+        return materialSelection;
+    }
+
+    void SetMaterialSelection(MaterialSelection selection)
+    {
+        if (selection == materialSelection) return;
+        materialSelection = selection;
     }
 
     ImVec4 GetColor()
@@ -165,6 +184,7 @@ private:
     float roughness = 0.0f;
     ImVec4 emissionColor = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
     float emissionRadius = 10;
+    MaterialSelection materialSelection = MaterialSelection::Brick;
 
     DataTransfer() = default;
 };
