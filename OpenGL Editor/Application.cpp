@@ -242,6 +242,20 @@ void Application::Update()
 
 		material.value().UpdateRoughness(roughness);
 	}
+
+	if (DataTransfer::Instance().HasChanged(EMISSION_COLOR_CHANGED))
+	{
+		DataTransfer::Instance().ClearChanged(EMISSION_COLOR_CHANGED);
+
+		emissionColor = DataTransfer::Instance().GetEmissionColor();
+	}
+
+	if (DataTransfer::Instance().HasChanged(EMISSION_RADIUS_CHANGED))
+	{
+		DataTransfer::Instance().ClearChanged(EMISSION_RADIUS_CHANGED);
+
+		emissionRadius = DataTransfer::Instance().GetEmissionRadius();
+	}
 }
 
 void Application::Render()
@@ -252,10 +266,10 @@ void Application::Render()
 
 	if(skyboxActive)
 	{
-		background->Draw(backgroundShader.value());
+		background->Draw(backgroundShader.value(), glm::vec3(emissionColor.x, emissionColor.y, emissionColor.z), emissionRadius);
 	}
 	
-	currentMesh->Draw(simpleShader.value(), material.value(), view, projection, glm::vec3(color.x, color.y, color.z), 0, skybox->GetCubemapTexture(), distance);
+	currentMesh->Draw(simpleShader.value(), material.value(), view, projection, glm::vec3(color.x, color.y, color.z), 0, skybox->GetCubemapTexture(), distance, glm::vec3(emissionColor.x, emissionColor.y, emissionColor.z));
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	//SECOND PASS - Post
@@ -263,7 +277,7 @@ void Application::Render()
 	glDisable(GL_DEPTH_TEST);
 	display->Clear(0.05, 0.05, 0.05, 1);
 
-	postScreen->Draw(postShader.value());
+	postScreen->Draw(postShader.value(), glm::vec3(emissionColor.x, emissionColor.y, emissionColor.z), emissionRadius);
 
 	glEnable(GL_DEPTH_TEST);
 

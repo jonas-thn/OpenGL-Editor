@@ -10,7 +10,9 @@ enum ChangedFlags : uint32_t
     MESH_CHANGED = 1 << 1,
     COLOR_CHANGED = 1 << 2,
     SKYBOX_CHANGED = 1 << 3,
-    ROUGHNESS_CHANGED = 1 << 4
+    ROUGHNESS_CHANGED = 1 << 4,
+    EMISSION_COLOR_CHANGED = 1 << 5,
+    EMISSION_RADIUS_CHANGED = 1 << 6
 };
 
 enum class MeshSelection
@@ -107,6 +109,26 @@ public:
     {
         roughness = newRoughness;
     }
+
+    ImVec4 GetEmissionColor() const
+    {
+        return emissionColor;
+    }
+
+    void SetEmissionColor(ImVec4 color)
+    {
+        emissionColor = color;
+    }
+
+    float GetEmissionRadius() const
+    {
+        return emissionRadius;
+    }
+
+    void SetEmissionRadius(float newRadius)
+    {
+        emissionRadius = newRadius;
+    }
     
     void SetChanged(ChangedFlags flag)
     {
@@ -141,6 +163,8 @@ private:
     ImVec4 selectedColor = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
     bool skybox = false;
     float roughness = 0.0f;
+    ImVec4 emissionColor = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
+    float emissionRadius = 10;
 
     DataTransfer() = default;
 };

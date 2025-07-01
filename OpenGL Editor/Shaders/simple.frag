@@ -21,6 +21,8 @@ uniform int doubleLighting;
 uniform samplerCube skyboxTexture;
 uniform vec3 cameraPos;
 
+uniform vec3 emissionColor;
+
 void main()
 {
 	//DIFFUSE
@@ -38,5 +40,6 @@ void main()
 	vec3 R = reflect(I, normalize(Normals));
 	vec4 reflection = vec4(texture(skyboxTexture, R).rgb, 1.0);
 
-	FragColor = mix(diffuse, reflection, material.roughness);
+	vec4 mixedColor = mix(diffuse, reflection, material.roughness);
+	FragColor = vec4(mixedColor + vec4(emissionColor * 2, 1.0f));
 }

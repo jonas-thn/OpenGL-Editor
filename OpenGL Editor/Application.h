@@ -87,6 +87,8 @@ private:
 	bool skyboxActive = false;
 	std::optional<Skybox> skybox;
 	float roughness;
+	ImVec4 emissionColor = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
+	float emissionRadius = 10.0f;
 
 private:
 	int GetNextTextureIndex();

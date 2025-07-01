@@ -177,27 +177,27 @@ void GUI::SettingsWindow(Display& display)
 	ImGui::Dummy(ImVec2(0.0f, 10.0f));
 
 	//ColorPicker
-	static float pickedColor [3] { 1.0, 1.0, 1.0 };
-	static bool pickerOpen = false;
+	static float baseColor [3] { 1.0, 1.0, 1.0 };
+	static bool pickerOpenColor = false;
 
 	if(ImGui::Button("Base Color"))
 	{
-		pickerOpen = !pickerOpen;
+		pickerOpenColor = !pickerOpenColor;
 	}
 
 	ImGui::SameLine();
 	ImVec2 p0 = ImGui::GetCursorScreenPos(); 
 	ImVec2 p1 = ImVec2(p0.x + 40, p0.y + 19); 
-	ImU32 color = IM_COL32((pickedColor[0] * 255), (pickedColor[1] * 255), (pickedColor[2] * 255), 255);
+	ImU32 color = IM_COL32((baseColor[0] * 255), (baseColor[1] * 255), (baseColor[2] * 255), 255);
 	ImGui::GetWindowDrawList()->AddRectFilled(p0, p1, color);
 	ImGui::NewLine();
 
-	if (pickerOpen)
+	if (pickerOpenColor)
 	{
-		if (ImGui::ColorPicker3("Color", pickedColor))
+		if (ImGui::ColorPicker3("Base Color", baseColor))
 		{
 			DataTransfer::Instance().SetChanged(COLOR_CHANGED);
-			ImVec4 colorData(pickedColor[0], pickedColor[1], pickedColor[2], 1.0);
+			ImVec4 colorData(baseColor[0], baseColor[1], baseColor[2], 1.0);
 			DataTransfer::Instance().SetColor(colorData);
 		}
 	}
@@ -224,6 +224,43 @@ void GUI::SettingsWindow(Display& display)
 	{
 		DataTransfer::Instance().SetRoughness(rough);
 		DataTransfer::Instance().SetChanged(ROUGHNESS_CHANGED);
+	}
+
+	//Emission Color
+	ImGui::Dummy(ImVec2(0.0f, 10.0f));
+
+	static float emissionColor[3]{ 0.0, 0.0, 0.0 };
+	static bool pickerOpenEmission = false;
+
+	if (ImGui::Button("Emission Color"))
+	{
+		pickerOpenEmission = !pickerOpenEmission;
+	}
+
+	ImGui::SameLine();
+	p0 = ImGui::GetCursorScreenPos();
+	p1 = ImVec2(p0.x + 40, p0.y + 19);
+	color = IM_COL32((emissionColor[0] * 255), (emissionColor[1] * 255), (emissionColor[2] * 255), 255);
+	ImGui::GetWindowDrawList()->AddRectFilled(p0, p1, color);
+	ImGui::NewLine();
+
+	if (pickerOpenEmission)
+	{
+		if (ImGui::ColorPicker3("Emission Color", emissionColor))
+		{
+			DataTransfer::Instance().SetChanged(EMISSION_COLOR_CHANGED);
+			ImVec4 colorData(emissionColor[0], emissionColor[1], emissionColor[2], 1.0);
+			DataTransfer::Instance().SetEmissionColor(colorData);
+		}
+	}
+
+	ImGui::Dummy(ImVec2(0.0f, 10.0f));
+
+	static float rad = DataTransfer::Instance().GetEmissionRadius();
+	if (ImGui::SliderFloat("Emission\nRadius", &rad, 1.0f, 20.0f, "%.3f"))
+	{
+		DataTransfer::Instance().SetEmissionRadius(rad);
+		DataTransfer::Instance().SetChanged(EMISSION_RADIUS_CHANGED);
 	}
 
 	ImGui::End();

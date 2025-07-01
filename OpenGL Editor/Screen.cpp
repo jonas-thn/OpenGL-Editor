@@ -72,7 +72,7 @@ void Screen::Init()
 	glBindVertexArray(0);
 }
 
-void Screen::Draw(Shader& shader) const
+void Screen::Draw(Shader& shader, glm::vec3 emissionColor, float emissionRadius) const
 {
 	if (vertices.empty()) return;
 
@@ -84,6 +84,8 @@ void Screen::Draw(Shader& shader) const
 	glActiveTexture(GL_TEXTURE0 + textureIndex);
 	glBindTexture(GL_TEXTURE_2D, textureID);
 	shader.SetInt("screenTexture", textureIndex);
+	shader.SetVec3("emissionColor", emissionColor);
+	shader.SetInt("bloomRadius", (int)emissionRadius);
 
 	glBindVertexArray(VAO);
 	glDrawArrays(GL_TRIANGLES, 0, vertices.size() / 5);

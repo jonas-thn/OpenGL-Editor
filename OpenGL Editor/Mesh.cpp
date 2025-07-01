@@ -90,7 +90,7 @@ void Mesh::SetScale(glm::vec3 scale)
 	}
 }
 
-void Mesh::Draw(Shader& shader, Material& material, glm::mat4& view, glm::mat4& projection, glm::vec3 color, int skyboxTextureIndex, unsigned int cubemapTexture, float distance) const
+void Mesh::Draw(Shader& shader, Material& material, glm::mat4& view, glm::mat4& projection, glm::vec3 color, int skyboxTextureIndex, unsigned int cubemapTexture, float distance, glm::vec3 emissionColor) const
 {
 	if (vertices.empty()) return;
 
@@ -104,6 +104,8 @@ void Mesh::Draw(Shader& shader, Material& material, glm::mat4& view, glm::mat4& 
 
 	glm::vec3 camPos(0.0f, 0.0f, distance);
 	shader.SetVec3("cameraPos", camPos);
+
+	shader.SetVec3("emissionColor", emissionColor);
 
 	glActiveTexture(GL_TEXTURE0 + skyboxTextureIndex);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);

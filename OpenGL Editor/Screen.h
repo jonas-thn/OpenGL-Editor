@@ -20,7 +20,7 @@ public:
 
 	std::vector<float>& GetVertices() { return vertices; }
 
-	void Draw(Shader& shader) const;
+	void Draw(Shader& shader, glm::vec3 emissionColor, float emissionRadius) const;
 
 private:
 	std::vector<float> vertices;
