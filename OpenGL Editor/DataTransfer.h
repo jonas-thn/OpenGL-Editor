@@ -33,8 +33,8 @@ enum class MaterialSelection
 {
     None,
     Brick,
-    Container,
-    Box,
+    Stone,
+    Tiles,
     Wood
 };
 

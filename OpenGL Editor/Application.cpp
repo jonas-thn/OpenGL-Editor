@@ -32,12 +32,11 @@ void Application::Init()
 	background->Init();
 
 	//Materials
-	int noNormalIndex = GetNextTextureIndex();
-	brickMaterial.emplace(GetNextTextureIndex(), "./Textures/brickwall.jpg", GetNextTextureIndex(), "./Textures/brickwall_normal.jpg", 0.0f);
-	containerMaterial.emplace(GetNextTextureIndex(), "./Textures/container2.png", noNormalIndex, "./Textures/no-normals.png", 0.0f);
-	boxMaterial.emplace(GetNextTextureIndex(), "./Textures/container.jpg", noNormalIndex, "./Textures/no-normals.png", 0.0f);
-	woodMaterial.emplace(GetNextTextureIndex(), "./Textures/bark_brown_diff.png", GetNextTextureIndex(), "./Textures/bark_brown_normal.png", 0.0f);
-	noMaterial.emplace(GetNextTextureIndex(), "./Textures/white.png", noNormalIndex, "./Textures/no-normals.png", 0.0f);
+	brickMaterial.emplace(GetNextTextureIndex(), "./Textures/brickwall.jpg", GetNextTextureIndex(), "./Textures/brickwall_normal.jpg");
+	woodMaterial.emplace(GetNextTextureIndex(), "./Textures/wood_trunk_wall_diff_1k.jpg", GetNextTextureIndex(), "./Textures/wood_trunk_wall_nor_gl_1k.jpg");
+	tilesMaterial.emplace(GetNextTextureIndex(), "./Textures/rubber_tiles_diff_1k.jpg", GetNextTextureIndex(), "./Textures/rubber_tiles_nor_gl_1k.jpg");
+	stoneMaterial.emplace(GetNextTextureIndex(), "./Textures/rock_wall_13_diff_1k.jpg", GetNextTextureIndex(), "./Textures/rock_wall_13_nor_gl_1k.jpg");
+	noMaterial.emplace(GetNextTextureIndex(), "./Textures/white.png", GetNextTextureIndex(), "./Textures/no-normals.png");
 
 	skybox.emplace();
 }
@@ -230,7 +229,7 @@ void Application::Update()
 		{
 			currentMesh->SetScale(glm::vec3(1.0, 1.0, 1.0));
 		}
-
+		
 		DataTransfer::Instance().UpdateVertices(currentMesh->GetVertices());
 		DataTransfer::Instance().UpdateIndices(currentMesh->GetIndices());
 	}
@@ -286,16 +285,18 @@ void Application::Update()
 		case MaterialSelection::Wood:
 			currentMaterial = &woodMaterial;
 			break;
-		case MaterialSelection::Container:
-			currentMaterial = &containerMaterial;
+		case MaterialSelection::Stone:
+			currentMaterial = &stoneMaterial;
 			break;
 		case MaterialSelection::None:
 			currentMaterial = &noMaterial;
 			break;
-		case MaterialSelection::Box:
-			currentMaterial = &boxMaterial;
+		case MaterialSelection::Tiles:
+			currentMaterial = &tilesMaterial;
 			break;
 		}
+
+		DataTransfer::Instance().SetChanged(ROUGHNESS_CHANGED);
 	}
 }
 

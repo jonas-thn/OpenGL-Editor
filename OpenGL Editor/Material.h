@@ -11,7 +11,7 @@ class Material
 public:
 	static const int textureIndices[32];
 
-	Material(int diffuseIndex, const char* diffusePath, int normalIndex, const char* normalPath, float roughness);
+	Material(int diffuseIndex, const char* diffusePath, int normalIndex, const char* normalPath);
 	void UpdateRoughness(float newRoughness);
 
 	~Material();
@@ -25,5 +25,5 @@ private:
 	int normalIndex;
 	unsigned int normalMap;
 
-	float roughness;
+	float roughness = 0.0f;
 };

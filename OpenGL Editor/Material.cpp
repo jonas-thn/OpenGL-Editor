@@ -15,7 +15,7 @@ const int Material::textureIndices[32] =
 	GL_TEXTURE30, GL_TEXTURE31
 };
 
-Material::Material(int diffuseIndex, const char* diffusePath, int normalIndex, const char* normalPath, float roughness)
+Material::Material(int diffuseIndex, const char* diffusePath, int normalIndex, const char* normalPath)
 {
 	stbi_set_flip_vertically_on_load(true);
 
@@ -74,7 +74,6 @@ Material::Material(int diffuseIndex, const char* diffusePath, int normalIndex, c
 
 	this->diffuseIndex = diffuseIndex;
 	this->normalIndex = normalIndex;
-	this->roughness = roughness;
 }
 
 void Material::UpdateRoughness(float newRoughness)

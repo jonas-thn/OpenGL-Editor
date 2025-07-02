@@ -169,7 +169,7 @@ void GUI::SettingsWindow(Display& display)
 	ImGui::SeparatorText("Material Selection");
 
 	//Material Selection
-	const char* materials[] = { "None", "Brick", "Wood", "Conatiner", "Box"};
+	const char* materials[] = { "None", "Brick", "Wood", "Stone", "Tiles"};
 	static int selectedIndexMaterial = 0;
 	if (ImGui::Combo("Material", &selectedIndexMaterial, materials, IM_ARRAYSIZE(materials)))
 	{
@@ -185,10 +185,10 @@ void GUI::SettingsWindow(Display& display)
 			DataTransfer::Instance().SetMaterialSelection(MaterialSelection::Wood);
 			break;
 		case 3:
-			DataTransfer::Instance().SetMaterialSelection(MaterialSelection::Container);
+			DataTransfer::Instance().SetMaterialSelection(MaterialSelection::Stone);
 			break;
 		case 4:
-			DataTransfer::Instance().SetMaterialSelection(MaterialSelection::Box);
+			DataTransfer::Instance().SetMaterialSelection(MaterialSelection::Tiles);
 			break;
 		}
 

@@ -76,9 +76,9 @@ private:
 	//Materials
 	std::optional<Material> noMaterial;
 	std::optional<Material> brickMaterial;
-	std::optional<Material> containerMaterial;
+	std::optional<Material> stoneMaterial;
 	std::optional<Material> woodMaterial;
-	std::optional<Material> boxMaterial;
+	std::optional<Material> tilesMaterial;
 
 	std::optional<Material>* currentMaterial = &noMaterial;
 
