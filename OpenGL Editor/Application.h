@@ -33,7 +33,6 @@ public:
 	void ProcessInput();
 	void Update();
 	void Render();
-	void Cleanup();
 
 	bool IsRunning() const { return running; }
 
@@ -59,14 +58,15 @@ private:
 	std::optional<Shader> postShader;
 
 	//Objects
-	Mesh triangle = Mesh(std::vector<float>(std::begin(triangleVertices), std::end(triangleVertices)));
-	Mesh quad = Mesh(std::vector<float>(std::begin(quadVertices), std::end(quadVertices)), std::vector<unsigned int>(std::begin(quadIndices), std::end(quadIndices)));
-	Mesh cube = Mesh(std::vector<float>(std::begin(cubeVertices), std::end(cubeVertices)));
+	Mesh triangle = Mesh("./Models/triangle.obj");
+	Mesh quad = Mesh("./Models/quad.obj");
+	Mesh cube = Mesh("./Models/cube.obj");
 	Mesh sphere = Mesh("./Models/sphere.obj");
 	Mesh monkey = Mesh("./Models/monkey.obj");
 	Mesh ring = Mesh("./Models/ring.obj");
 	Mesh cone = Mesh("./Models/cone.obj");
 	Mesh cylinder = Mesh("./Models/cylinder.obj");
+	Mesh pyramid = Mesh("./Models/pyramid.obj");
 
 	Mesh* currentMesh = &cube;
 
@@ -78,7 +78,6 @@ private:
 	std::optional<Material> brickMaterial;
 	std::optional<Material> containerMaterial;
 	std::optional<Material> woodMaterial;
-	std::optional<Material> concreteMaterial;
 	std::optional<Material> boxMaterial;
 
 	std::optional<Material>* currentMaterial = &noMaterial;

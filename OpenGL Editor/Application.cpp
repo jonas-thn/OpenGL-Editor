@@ -26,6 +26,7 @@ void Application::Init()
 	ring.Init(lightPosition);
 	cone.Init(lightPosition);
 	cylinder.Init(lightPosition);
+	pyramid.Init(lightPosition);
 
 	background.emplace(std::vector<float>(std::begin(screenVertices), std::end(screenVertices)), GetNextTextureIndex(), "./Textures/Cubemap/left.jpg");
 	background->Init();
@@ -34,11 +35,9 @@ void Application::Init()
 	int noNormalIndex = GetNextTextureIndex();
 	brickMaterial.emplace(GetNextTextureIndex(), "./Textures/brickwall.jpg", GetNextTextureIndex(), "./Textures/brickwall_normal.jpg", 0.0f);
 	containerMaterial.emplace(GetNextTextureIndex(), "./Textures/container2.png", noNormalIndex, "./Textures/no-normals.png", 0.0f);
-	woodMaterial.emplace(GetNextTextureIndex(), "./Textures/wood.png", noNormalIndex, "./Textures/no-normals.png", 0.0f);
 	boxMaterial.emplace(GetNextTextureIndex(), "./Textures/container.jpg", noNormalIndex, "./Textures/no-normals.png", 0.0f);
-	concreteMaterial.emplace(GetNextTextureIndex(), "./Textures/concreteTexture.png", noNormalIndex, "./Textures/no-normals.png", 0.0f);
+	woodMaterial.emplace(GetNextTextureIndex(), "./Textures/bark_brown_diff.png", GetNextTextureIndex(), "./Textures/bark_brown_normal.png", 0.0f);
 	noMaterial.emplace(GetNextTextureIndex(), "./Textures/white.png", noNormalIndex, "./Textures/no-normals.png", 0.0f);
-
 
 	skybox.emplace();
 }
@@ -218,6 +217,9 @@ void Application::Update()
 		case MeshSelection::Monkey:
 			currentMesh = &monkey;
 			break;
+		case MeshSelection::Pyramid:
+			currentMesh = &pyramid;
+			break;
 		}
 
 		if(DataTransfer::Instance().GetOrtho())
@@ -290,9 +292,6 @@ void Application::Update()
 		case MaterialSelection::None:
 			currentMaterial = &noMaterial;
 			break;
-		case MaterialSelection::Concrete:
-			currentMaterial = &concreteMaterial;
-			break;
 		case MaterialSelection::Box:
 			currentMaterial = &boxMaterial;
 			break;
@@ -329,10 +328,6 @@ void Application::Render()
 	display->Clear(0, 0, 0, 1);
 	gui->Render(postFBOTexture, display.value());
 	display->SwapBuffers();
-}
-
-void Application::Cleanup()
-{
 }
 
 int Application::GetNextTextureIndex()

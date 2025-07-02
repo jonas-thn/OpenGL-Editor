@@ -14,6 +14,8 @@ void Mesh::Init(glm::vec3 lightPos, int doubleLighting)
 
 	if (vertices.empty()) return;
 
+	const int stride = 14 * sizeof(float);
+
 	glGenVertexArrays(1, &VAO);
 	glBindVertexArray(VAO);
 
@@ -21,14 +23,25 @@ void Mesh::Init(glm::vec3 lightPos, int doubleLighting)
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 		glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
 
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+		//pos
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, (void*)0);
 		glEnableVertexAttribArray(0);
 
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+		//normal
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, stride, (void*)(3 * sizeof(float)));
 		glEnableVertexAttribArray(1);
 
-		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+		//uv
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, stride, (void*)(6 * sizeof(float)));
 		glEnableVertexAttribArray(2);
+
+		//tangent
+		glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, stride, (void*)(8 * sizeof(float)));
+		glEnableVertexAttribArray(3);
+
+		//bitangent
+		glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, stride, (void*)(11 * sizeof(float)));
+		glEnableVertexAttribArray(4);
 
 		glGenBuffers(1, &EBO);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
@@ -115,7 +128,7 @@ void Mesh::Draw(Shader& shader, Material& material, glm::mat4& view, glm::mat4& 
 	glBindVertexArray(VAO);
 	if (indices.empty())
 	{
-		glDrawArrays(GL_TRIANGLES, 0, vertices.size() / 8);
+		glDrawArrays(GL_TRIANGLES, 0, vertices.size() / 14);
 	}
 	else
 	{
@@ -155,46 +168,117 @@ void Mesh::ProcessNode(aiNode* node, const aiScene* scene)
 
 void Mesh::ProcessMesh(aiMesh* mesh, const aiScene* scene)
 {
+	// Collect position, normal, texcoord
+	std::vector<glm::vec3> positions;
+	std::vector<glm::vec3> normals;
+	std::vector<glm::vec2> texCoords;
+
 	for (unsigned int i = 0; i < mesh->mNumVertices; i++)
 	{
-		vertices.push_back(mesh->mVertices[i].x);
-		vertices.push_back(mesh->mVertices[i].y);
-		vertices.push_back(mesh->mVertices[i].z);
+		positions.emplace_back(mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z);
 
-		if (mesh->HasNormals()) 
-		{
-			vertices.push_back(mesh->mNormals[i].x);
-			vertices.push_back(mesh->mNormals[i].y);
-			vertices.push_back(mesh->mNormals[i].z);
-		}
-		else 
-		{
-			vertices.push_back(0.0f);
-			vertices.push_back(0.0f);
-			vertices.push_back(0.0f);
-		}
+		if (mesh->HasNormals())
+			normals.emplace_back(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z);
+		else
+			normals.emplace_back(0.0f, 0.0f, 0.0f);
 
-		if (mesh->mTextureCoords[0]) 
-		{
-			vertices.push_back(mesh->mTextureCoords[0][i].x);
-			vertices.push_back(mesh->mTextureCoords[0][i].y);
-		}
-		else 
-		{
-			vertices.push_back(0.0f);
-			vertices.push_back(0.0f);
-		}
+		if (mesh->mTextureCoords[0])
+			texCoords.emplace_back(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y);
+		else
+			texCoords.emplace_back(0.0f, 0.0f);
 	}
 
+	// Initialize tangents and bitangents
+	std::vector<glm::vec3> tangents(mesh->mNumVertices, glm::vec3(0.0f));
+	std::vector<glm::vec3> bitangents(mesh->mNumVertices, glm::vec3(0.0f));
+
+	// Compute tangents and bitangents
 	for (unsigned int i = 0; i < mesh->mNumFaces; i++)
 	{
-		aiFace face = mesh->mFaces[i];
+		const aiFace& face = mesh->mFaces[i];
+		if (face.mNumIndices != 3) continue; // Only triangles
+
+		unsigned int i0 = face.mIndices[0];
+		unsigned int i1 = face.mIndices[1];
+		unsigned int i2 = face.mIndices[2];
+
+		const glm::vec3& v0 = positions[i0];
+		const glm::vec3& v1 = positions[i1];
+		const glm::vec3& v2 = positions[i2];
+
+		const glm::vec2& uv0 = texCoords[i0];
+		const glm::vec2& uv1 = texCoords[i1];
+		const glm::vec2& uv2 = texCoords[i2];
+
+		glm::vec3 deltaPos1 = v1 - v0;
+		glm::vec3 deltaPos2 = v2 - v0;
+		glm::vec2 deltaUV1 = uv1 - uv0;
+		glm::vec2 deltaUV2 = uv2 - uv0;
+
+		float r = (deltaUV1.x * deltaUV2.y - deltaUV1.y * deltaUV2.x);
+		if (r == 0.0f) r = 1.0f; else r = 1.0f / r;
+
+		glm::vec3 tangent = (deltaPos1 * deltaUV2.y - deltaPos2 * deltaUV1.y) * r;
+		glm::vec3 bitangent = (deltaPos2 * deltaUV1.x - deltaPos1 * deltaUV2.x) * r;
+
+		tangents[i0] += tangent;
+		tangents[i1] += tangent;
+		tangents[i2] += tangent;
+
+		bitangents[i0] += bitangent;
+		bitangents[i1] += bitangent;
+		bitangents[i2] += bitangent;
+	}
+
+	// Pack final vertex buffer with position, normal, texcoord, tangent, bitangent
+	for (unsigned int i = 0; i < mesh->mNumVertices; i++)
+	{
+		// position
+		vertices.push_back(positions[i].x);
+		vertices.push_back(positions[i].y);
+		vertices.push_back(positions[i].z);
+
+		// normal
+		vertices.push_back(normals[i].x);
+		vertices.push_back(normals[i].y);
+		vertices.push_back(normals[i].z);
+
+		// texcoord
+		vertices.push_back(texCoords[i].x);
+		vertices.push_back(texCoords[i].y);
+
+		glm::vec3 n = glm::normalize(normals[i]);
+		glm::vec3 t = tangents[i];
+
+		// Gram-Schmidt orthogonalize
+		t = glm::normalize(t - n * glm::dot(n, t));
+
+		// Calculate handedness (optional, not used in your shaders but good to have)
+		glm::vec3 b = glm::cross(n, t);
+		float handedness = (glm::dot(b, bitangents[i]) < 0.0f) ? -1.0f : 1.0f;
+
+		// Store
+		vertices.push_back(t.x);
+		vertices.push_back(t.y);
+		vertices.push_back(t.z);
+
+		vertices.push_back(b.x);
+		vertices.push_back(b.y);
+		vertices.push_back(b.z);
+	}
+
+	// Indices (unchanged)
+	for (unsigned int i = 0; i < mesh->mNumFaces; i++)
+	{
+		const aiFace& face = mesh->mFaces[i];
 		for (unsigned int j = 0; j < face.mNumIndices; j++)
 		{
 			indices.push_back(face.mIndices[j]);
 		}
 	}
 }
+
+
 
 
 	

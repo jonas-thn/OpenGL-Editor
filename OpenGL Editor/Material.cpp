@@ -21,11 +21,12 @@ Material::Material(int diffuseIndex, const char* diffusePath, int normalIndex, c
 
 	float borderColor[] = { 1.0f, 1.0f, 0.0f, 1.0f };
 	int width, height, nChannels;
-	unsigned char* data = stbi_load(diffusePath, &width, &height, &nChannels, 0);
+	unsigned char* data = stbi_load(diffusePath, &width, &height, &nChannels, 3);
 
 	if (data == NULL)
 	{
-		std::cout << "Failed to load texture." << std::endl;
+		const char* reason = stbi_failure_reason();
+		std::cout << "stbi_load failed: " << (reason ? reason : "unknown") << std::endl;
 	}
 
 	glGenTextures(1, &diffuseTexture);
@@ -40,26 +41,17 @@ Material::Material(int diffuseIndex, const char* diffusePath, int normalIndex, c
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	if (nChannels == 4)
-	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-	}
-	else if (nChannels == 3)
-	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-	}
-	else
-	{
-		std::cout << "nChannels Image Error." << std::endl;
-	}
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+
 	glGenerateMipmap(GL_TEXTURE_2D);
 
 
-	data = stbi_load(normalPath, &width, &height, &nChannels, 0);
+	data = stbi_load(normalPath, &width, &height, &nChannels, 3);
 
 	if (data == NULL)
 	{
-		std::cout << "Failed to load texture." << std::endl;
+		const char* reason = stbi_failure_reason();
+		std::cout << "stbi_load failed: " << (reason ? reason : "unknown") << std::endl;
 	}
 
 	glGenTextures(1, &normalMap);
@@ -74,18 +66,8 @@ Material::Material(int diffuseIndex, const char* diffusePath, int normalIndex, c
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	if (nChannels == 4)
-	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-	}
-	else if (nChannels == 3)
-	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-	}
-	else
-	{
-		std::cout << "nChannels Image Error." << std::endl;
-	}
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+
 	glGenerateMipmap(GL_TEXTURE_2D);
 
 	stbi_image_free(data);

@@ -14,7 +14,5 @@ int main(int argc, char* argv[])
 		app.Render();
 	}
 
-	app.Cleanup();
-
 	return 0;
 }

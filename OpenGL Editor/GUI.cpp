@@ -126,7 +126,7 @@ void GUI::SettingsWindow(Display& display)
 
 	//Object Selection
 	ImGui::SeparatorText("Mesh Selection");
-	const char* meshes[] = { "Triangle", "Quad", "Cube", "Sphere", "Ring", "Cone", "Cylinder", "Monkey" };
+	const char* meshes[] = { "Triangle", "Quad", "Cube", "Sphere", "Ring", "Cone", "Cylinder", "Monkey", "Pyramid"};
 	static int selectedIndexMesh = 2;
 	if (ImGui::Combo("Mesh", &selectedIndexMesh, meshes, IM_ARRAYSIZE(meshes)))
 	{
@@ -156,6 +156,9 @@ void GUI::SettingsWindow(Display& display)
 		case 7:
 			DataTransfer::Instance().SetMeshSelection(MeshSelection::Monkey);
 			break;
+		case 8:
+			DataTransfer::Instance().SetMeshSelection(MeshSelection::Pyramid);
+			break;
 		}
 
 		DataTransfer::Instance().SetChanged(MESH_CHANGED);
@@ -166,7 +169,7 @@ void GUI::SettingsWindow(Display& display)
 	ImGui::SeparatorText("Material Selection");
 
 	//Material Selection
-	const char* materials[] = { "None", "Brick", "Wood", "Conatiner", "Box", "Concrete"};
+	const char* materials[] = { "None", "Brick", "Wood", "Conatiner", "Box"};
 	static int selectedIndexMaterial = 0;
 	if (ImGui::Combo("Material", &selectedIndexMaterial, materials, IM_ARRAYSIZE(materials)))
 	{
@@ -186,9 +189,6 @@ void GUI::SettingsWindow(Display& display)
 			break;
 		case 4:
 			DataTransfer::Instance().SetMaterialSelection(MaterialSelection::Box);
-			break;
-		case 5:
-			DataTransfer::Instance().SetMaterialSelection(MaterialSelection::Concrete);
 			break;
 		}
 

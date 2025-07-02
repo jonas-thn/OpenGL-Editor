@@ -25,17 +25,17 @@ enum class MeshSelection
     Monkey,
     Ring,
     Cone,
-    Cylinder
+    Cylinder,
+    Pyramid
 };
 
 enum class MaterialSelection
 {
     None,
     Brick,
-    Wood,
     Container,
     Box,
-    Concrete
+    Wood
 };
 
 class DataTransfer 

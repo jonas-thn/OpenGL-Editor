@@ -18,7 +18,6 @@
 class Mesh
 {
 public:
-	Mesh(std::vector<float> vertices, std::vector<unsigned int> indices = {}) : vertices(vertices), indices(indices) {}
 	Mesh(std::string path) : path(path) {}
 
 	~Mesh() = default;
@@ -50,5 +49,8 @@ private:
 
 	glm::vec3 lightPosition;
 	int doubleLighting = 0;
+
+	std::vector<glm::vec3> tangents;
+	std::vector<glm::vec3> bitangents;
 };
 
