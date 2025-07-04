@@ -3,7 +3,7 @@
 -made with C++ and OpenGL / SDL <br>
 -additional libs: glm, assimp, imgui <br> <br>
 
-<table>
+<table cellspacing="10" cellpadding="10">
   <tr>
     <td><img src="https://github.com/jonas-thn/OpenGL-Editor/blob/fc8f63051d7cedbd1c1faa0ad482141bb7a44a21/B401762A-1CCA-40EF-839A-727962E72A0F.png" width="300"/></td>
     <td><img src="https://github.com/jonas-thn/OpenGL-Editor/blob/fc8f63051d7cedbd1c1faa0ad482141bb7a44a21/2DAFF782-D2B9-4459-8D3C-6F39C4D07BB9.png" width="300"/></td>
