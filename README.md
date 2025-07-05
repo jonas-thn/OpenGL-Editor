@@ -1,7 +1,7 @@
 # OpenGL 3D Graphics Editor
 -3D renderer project with realtime editor window <br>
 -made with C++ and OpenGL / SDL <br>
--additional libs: glm, assimp, imgui <br> <br>
+-additional libs: glm, assimp, imgui, stbimage <br> <br>
 
 <table cellspacing="0" cellpadding="0">
   <tr>
